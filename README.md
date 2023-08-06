@@ -22,19 +22,19 @@ git clone https://github.com/vidojesevic/imgprocesslib
 ```
 3. Change into the project directory:<br />
 ```
-cd imgprocesslib<br />
+cd imgprocesslib
 ```
 4. Compile the code:<br />
 ```
-make<br />
+make
 ```
 5. Install the program globally (you may need to use sudo):<br />
 ```
-sudo make install<br />
+sudo make install
 ```
 ## Uninstall the program:
 ```
-sudo make uninstall<br />
+sudo make uninstall
 ```
 ## License
 This project is licensed under the GNU General Public License v3.0. See the LICENSE file for details.

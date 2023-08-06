@@ -16,6 +16,8 @@ $(OUT): $(SRC)
 
 install: $(OUT)
 	install -m 755 $(OUT) $(INSTALL_DIR)
+	cp imgprocess.1 /usr/local/share/man/man1/
+	chmod 644 /usr/local/share/man/man1/imgprocess.1
 
 uninstall:
 	rm -f $(INSTALL_DIR)/$(OUT)

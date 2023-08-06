@@ -1,12 +1,26 @@
-# imgprocesslib
-Simple terminal base image process tool for quick resizing...
+# imgprocesslib - Simple Image Processing Library
+## Overview 
+mgprocesslib is a simple terminal-based image processing tool that allows you to resize images quickly. It provides an easy-to-use command-line interface for resizing images to various predefined dimensions, making it convenient for preparing images for use on websites and other applications.
+
+## Features
+- Resize images to predefined dimensions suitable for various use cases.<br />
+- Easy installation and usage.<br />
+- Command-line interface for quick and efficient image processing.<br />
+
+## Requirements
+- GCC (GNU Compiler Collection)
+- C Standard Library
+- stb_image.h (Included in the repository)<br />
 
 ## Installation guide
-git clone https://github.com/vidojesevic/imgprocesslib <br />
+To install imgprocesslib, follow the steps below:
+1. Clone the repository to your local machine:
+git clone https://github.com/vidojesevic/imgprocesslib
+2. Change into the project directory:
 cd imgprocesslib <br />
-### Compile code
+3. Compile the code:
 make <br />
-### Install program
+4. Install the program globally (you may need to use sudo):
 sudo make install <br />
-### Uninstall program
+5. Uninstall the program:
 sudo mane uninstall

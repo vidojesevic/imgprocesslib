@@ -22,5 +22,5 @@ cd imgprocesslib <br />
 make <br />
 4. Install the program globally (you may need to use sudo):<br />
 sudo make install <br />
-5. Uninstall the program:<br />
-sudo mane uninstall
+## Uninstall the program:
+sudo mane uninstall<br />

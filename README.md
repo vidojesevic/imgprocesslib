@@ -15,12 +15,12 @@ mgprocesslib is a simple terminal-based image processing tool that allows you to
 ## Installation guide
 To install imgprocesslib, follow the steps below: <br />
 1. Clone the repository to your local machine:<br />
-git clone https://github.com/vidojesevic/imgprocesslib
+git clone https://github.com/vidojesevic/imgprocesslib`#ffffff`
 2. Change into the project directory:<br />
-cd imgprocesslib <br />
+cd imgprocesslib `#ffffff`<br />
 3. Compile the code:<br />
-make <br />
+make `#ffffff`<br />
 4. Install the program globally (you may need to use sudo):<br />
-sudo make install <br />
+sudo make install `#ffffff`<br />
 ## Uninstall the program:
-sudo make uninstall<br />
+sudo make uninstall`#ffffff`<br />

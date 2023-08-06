@@ -1,4 +1,5 @@
 # Image Processing Library
+# See LICENSE file for copyright and license details.
 
 CC = gcc
 SRC = imgprocesslib.c

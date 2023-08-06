@@ -1,3 +1,6 @@
+/* imgprocess - Image Processing Library  
+// See LICENSE file for copyright and license details. 
+*/
 void red() {
     printf("\033[1;31m");
 }

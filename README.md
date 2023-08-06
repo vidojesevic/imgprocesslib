@@ -13,14 +13,14 @@ mgprocesslib is a simple terminal-based image processing tool that allows you to
 - stb_image.h (Included in the repository)<br />
 
 ## Installation guide
-To install imgprocesslib, follow the steps below:
-1. Clone the repository to your local machine:
+To install imgprocesslib, follow the steps below: <br />
+1. Clone the repository to your local machine:<br />
 git clone https://github.com/vidojesevic/imgprocesslib
-2. Change into the project directory:
+2. Change into the project directory:<br />
 cd imgprocesslib <br />
-3. Compile the code:
+3. Compile the code:<br />
 make <br />
-4. Install the program globally (you may need to use sudo):
+4. Install the program globally (you may need to use sudo):<br />
 sudo make install <br />
-5. Uninstall the program:
+5. Uninstall the program:<br />
 sudo mane uninstall

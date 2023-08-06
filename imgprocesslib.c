@@ -176,23 +176,23 @@ void printMenu() {
     printf("\t%d Resize image\n", OPTION_RESIZE);
     printf("\t%d Crop image\n", OPTION_CROP);
     printf("\t%d Rotate image\n", OPTION_ROTATE);
-    printf("\t%d Quit without saving\n", OPTION_QUIT);
+    printf("\t%d Quit\n", OPTION_QUIT);
 }
 
 void printResMenu() {
     printf("    Resize options:\n");
-    printf("\t%d Background image [1920 x 1080 pixels] \\ [16:9]\n", OPTION_BACKGR);
-    printf("\t%d Hero image [1280 x 720 pixels] \\ [16:9]\n", OPTION_HERO);
-    printf("\t%d Website banner [250 x 250 pixels] \\ [1:1]\n", OPTION_BANNER);
-    printf("\t%d Blog image [1200 x 630 pixels] \\ [3:2]\n", OPTION_BLOG);
-    printf("\t%d Logo rectangle [250 x 100 pixels] \\ [2:3]\n", OPTION_LOGOREC);
-    printf("\t%d Logo square [100 x 100 pixels] \\ [1:1]\n", OPTION_LOGOSC);
-    printf("\t%d Favicon [16 x 16 pixels] \\ [1:1]\n", OPTION_FAVICON);
-    printf("\t%d Social Media Icon [32 x 32 pixels] \\ [1:1]\n", OPTION_SOCIAL);
-    printf("\t%d Lightbox image (Full Screen)[1600 x 500 pixels] \\ [16:9]\n", OPTION_LIGHTBOX);
-    printf("\t%d Thumbnail image [150 x 150 pixels] \\ [1:1]\n", OPTION_THUMBNAIL);
+    printf("\t%d Background image [1920 x 1080] \\ [16:9]\n", OPTION_BACKGR);
+    printf("\t%d Hero image [1280 x 720] \\ [16:9]\n", OPTION_HERO);
+    printf("\t%d Website banner [250 x 250] \\ [1:1]\n", OPTION_BANNER);
+    printf("\t%d Blog image [1200 x 630] \\ [3:2]\n", OPTION_BLOG);
+    printf("\t%d Logo rectangle [250 x 100] \\ [2:3]\n", OPTION_LOGOREC);
+    printf("\t%d Logo square [100 x 100] \\ [1:1]\n", OPTION_LOGOSC);
+    printf("\t%d Favicon [16 x 16] \\ [1:1]\n", OPTION_FAVICON);
+    printf("\t%d Social Media Icon [32 x 32] \\ [1:1]\n", OPTION_SOCIAL);
+    printf("\t%d Lightbox image (Full Screen) [1600 x 500] \\ [16:9]\n", OPTION_LIGHTBOX);
+    printf("\t%d Thumbnail image [150 x 150t ] \\ [1:1]\n", OPTION_THUMBNAIL);
     printf("\t%d Custom resize image\n", OPTION_CUSTOM);
-    printf("\t%d Back\n", OPTION_BACK);
+    printf("\t%d Back to main menu\n", OPTION_BACK);
 }
 
 void resize(Pics *img, Dime *dime) {
@@ -438,11 +438,11 @@ Dime resizeThumb(Dime *dime) {
 }
 
 void crop() {
-    printf("    Crop image\n");
+    printf("    Crop image\nComming soon...\n");
 }
 
 void rotate() {
-    printf("    Rotate image\n");
+    printf("    Rotate image\nComming soon...\n");
 }
 
 void quit() {

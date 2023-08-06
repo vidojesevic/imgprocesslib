@@ -23,4 +23,4 @@ make <br />
 4. Install the program globally (you may need to use sudo):<br />
 sudo make install <br />
 ## Uninstall the program:
-sudo mane uninstall<br />
+sudo make uninstall<br />

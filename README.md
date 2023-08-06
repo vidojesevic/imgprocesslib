@@ -1,4 +1,6 @@
 # imgprocesslib - Simple Image Processing Library
+<span style="color:#blue">[![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](https://github.com/vidojesevic/imgprocesslib/blob/main/LICENSE)</span>
+
 ## Overview 
 mgprocesslib is a simple terminal-based image processing tool that allows you to resize images quickly. It provides an easy-to-use command-line interface for resizing images to various predefined dimensions, making it convenient for preparing images for use on websites and other applications.
 

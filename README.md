@@ -32,6 +32,9 @@ make
 ```
 sudo make install
 ```
+## Usage
+After installing the program, you can use it from anywhere on your system. Open a terminal and run the imgprocess command, followed by the desired image processing options.
+
 ## Uninstall the program:
 ```
 sudo make uninstall

@@ -34,3 +34,8 @@ sudo make install<br />
 ```
 sudo make uninstall<br />
 ```
+## License
+This project is licensed under the GNU General Public License v3.0. See the LICENSE file for details.
+## Acknowledgments
+mgprocesslib uses the stb_image.h library by Sean Barrett for image loading and saving. Many thanks to Sean for this excellent and lightweight library.
+

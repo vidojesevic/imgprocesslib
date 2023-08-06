@@ -17,7 +17,7 @@ To install imgprocesslib, follow the steps below: <br />
 1. Clone the repository to your local machine:<br />
 git clone https://github.com/vidojesevic/imgprocesslib`#ffffff`
 2. Change into the project directory:<br />
-cd imgprocesslib `#ffffff`<br />
+cd imgprocesslib #ffffff<br />
 3. Compile the code:<br />
 make `#ffffff`<br />
 4. Install the program globally (you may need to use sudo):<br />

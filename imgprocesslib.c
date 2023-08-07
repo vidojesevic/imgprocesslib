@@ -58,10 +58,16 @@ typedef struct NewDimension {
 #endif  
 
 typedef enum {
-    OPTION_RESIZE = 1,
-    OPTION_CROP,
-    OPTION_ROTATE,
-    OPTION_QUIT
+    RESIZE = 1,
+    CROP,
+    ROTATE,
+    QUIT
+} OptionType;
+
+typedef struct {
+    OptionType optionType;
+    char imegePath[256];
+    char background[256];
 } Option;
 
 typedef enum {

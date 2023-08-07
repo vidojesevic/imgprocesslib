@@ -90,12 +90,12 @@ int main(int argc, char *argv[]) {
     printf("In few quick steps your image will be ready for fast rendered website!\n");
 
     printf("Enter path to picture: ");
-    if(fgets(img.path, sizeof(img.path), stdin) == NULL) {
+    if (fgets(img.path, sizeof(img.path), stdin) == NULL) {
         reset();
         perror("Error: Bad user input!\n");
         exit(EXIT_FAILURE);
     }
-    if(img.path[strlen(img.path) - 1] != '\n') {
+    if (img.path[strlen(img.path) - 1] != '\n') {
         reset();
         fprintf(stderr, "Input too long, consider increasing the buffer size.\n");
         exit(EXIT_FAILURE);
@@ -104,6 +104,7 @@ int main(int argc, char *argv[]) {
 
     int width, height, channels, bitDepth;
     char *fileSize;
+    // printf("DEBUGING FILESIZE: %ld\n", fileSize);
     char bitInfo[64];
     unsigned char *imgPath = stbi_load(img.path, &width, &height, &channels, 0);
 
@@ -180,18 +181,18 @@ int main(int argc, char *argv[]) {
     // printf("img.data = %s\n", img.data);
     printInfo(&img);
 
-    while(option != OPTION_QUIT) {
+    while (option != OPTION_QUIT) {
         printMenu();
         printf("Option number: ");
         scanf("%d", &option);
-        while(option < OPTION_RESIZE || option > OPTION_QUIT) {
+        while (option < OPTION_RESIZE || option > OPTION_QUIT) {
             red();
             printf("Error number: %d\nOption must be in range [%d-%d]\n", errno, OPTION_RESIZE, OPTION_QUIT);
             yellow();
             printMenu();
             scanf("%d", &option);
         }
-        switch(option) {
+        switch (option) {
             case OPTION_RESIZE:
                 resize(&img, &dime);
                 break;
@@ -252,18 +253,18 @@ void resize(Pics *img, Dime *dime) {
     int backToMainMenu = 0;
     char proc, sv;
     // printf("    Resize image\n");
-    while(res != OPTION_BACK) { 
+    while (res != OPTION_BACK) { 
         printResMenu();
         printf("Resize option number: ");
         scanf("%d", &res);
-        while(res < OPTION_BACKGR || res > OPTION_BACK) {
+        while (res < OPTION_BACKGR || res > OPTION_BACK) {
             red();
             printf("Error number: %d\nOption must be in range [%d-%d]\n", errno, OPTION_BACKGR, OPTION_BACK);
             yellow();
             printResMenu();
             scanf("%d", &res);
         }
-        switch(res) {
+        switch (res) {
             case OPTION_BACKGR:
                 resizeBack(dime);
                 break;
@@ -304,24 +305,24 @@ void resize(Pics *img, Dime *dime) {
                 break;
         }
 
-        if(backToMainMenu != 1 && res != OPTION_BACK) {
+        if (backToMainMenu != 1 && res != OPTION_BACK) {
             printf("Proceed with new dimensions? [Y,n] ");
             scanf("%s", &proc);
 
-            if(proc != 'Y' && proc != 'y' && proc != 'n') { 
+            if (proc != 'Y' && proc != 'y' && proc != 'n') { 
                 printf("Error %d: Answer with 'Y' or 'n'!\n", errno);
             }
-            if(proc == 'Y' || proc == 'y') {
+            if (proc == 'Y' || proc == 'y') {
                 printResInfo(dime);
                 printf("Save image? [Y,n] ");
                 scanf("%s", &sv);
-                if(sv != 'Y' && sv != 'n' && sv != 'y') {
+                if (sv != 'Y' && sv != 'n' && sv != 'y') {
                     printf("Error %d: Answer with 'Y' or 'n'!\n", errno);
                 }
-                if(sv == 'n') {
+                if (sv == 'n') {
                     printf("Image NOT saved!\n");
                 }
-                if(sv == 'Y' || sv == 'y') {
+                if (sv == 'Y' || sv == 'y') {
                     // int newPx = dime->resWidth * dime->resHeight * img->channel;
                     // // int bytesPx = 
                     //
@@ -341,7 +342,7 @@ void resize(Pics *img, Dime *dime) {
                         saveImage(img->data, img->width, img->height, img->channel, dime->name);
                     }
                 }
-            } else if(proc == 'n') {
+            } else if (proc == 'n') {
                 printInfo(img);
             }
         }
@@ -394,7 +395,7 @@ char* calcSize(const char* filename) {
         fileSize = 0;
     }
 
-    if(fileSize > 1024) {
+    if (fileSize > 1024) {
         fileSize = fileSize / 1024;
         snprintf(sizeChar, sizeof(sizeChar), "%ld KiB", fileSize);
     }
@@ -406,33 +407,34 @@ char* calcSize(const char* filename) {
 }
 
 Dime resizeCustom(Dime *dime) {
+    printf("Custom dimensions");
+    clearInputBuffer();
 
-    printf("\nEnter WIDTH [pixels]: ");
-    scanf("%d", &dime->resWidth);
-    printf("Enter HEIGHT [pixels]: ");
-    scanf("%d", &dime->resHeight);
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
-    
+    getWidth(dime);
+    getHeight(dime);
+    getName(dime);
+
     return *dime;
 }
 
 Dime resizeBack(Dime *dime) {
-    printf("Background\n");
+    printf("Background image\n");
     dime->resWidth = 1920;
     dime->resHeight = 1080;
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
+
+    clearInputBuffer();
+    getName(dime);
 
     return *dime;
 }
 
 Dime resizeHero(Dime *dime) {
-    printf("Hero image\n");
+    printf("Background image\n");
     dime->resWidth = 1280;
     dime->resHeight = 720;
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
+
+    clearInputBuffer();
+    getName(dime);
 
     return *dime;
 }
@@ -441,8 +443,9 @@ Dime resizeBanner(Dime *dime) {
     printf("Website banner\n");
     dime->resWidth = 250;
     dime->resHeight = 250;
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
+
+    clearInputBuffer();
+    getName(dime);
 
     return *dime;
 }
@@ -451,8 +454,9 @@ Dime resizeBlog(Dime *dime) {
     printf("Blog image\n");
     dime->resWidth = 1200;
     dime->resHeight = 630;
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
+
+    clearInputBuffer();
+    getName(dime);
 
     return *dime;
 }
@@ -461,8 +465,9 @@ Dime resizeLogoRec(Dime *dime) {
     printf("Logo rectangle\n");
     dime->resWidth = 250;
     dime->resHeight = 100;
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
+
+    clearInputBuffer();
+    getName(dime);
 
     return *dime;
 }
@@ -471,8 +476,9 @@ Dime resizeLogoSc(Dime *dime) {
     printf("Logo square\n");
     dime->resWidth = 100;
     dime->resHeight = 100;
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
+
+    clearInputBuffer();
+    getName(dime);
 
     return *dime;
 }
@@ -481,8 +487,9 @@ Dime resizeFavicon(Dime *dime) {
     printf("Favicon\n");
     dime->resWidth = 16;
     dime->resHeight = 16;
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
+
+    clearInputBuffer();
+    getName(dime);
 
     return *dime;
 }
@@ -491,8 +498,9 @@ Dime resizeSocial(Dime *dime) {
     printf("Social media icon\n");
     dime->resWidth = 32;
     dime->resHeight = 32;
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
+
+    clearInputBuffer();
+    getName(dime);
 
     return *dime;
 }
@@ -501,8 +509,9 @@ Dime resizeLight(Dime *dime) {
     printf("Lightbox image\n");
     dime->resWidth = 1600;
     dime->resHeight = 500;
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
+
+    clearInputBuffer();
+    getName(dime);
 
     return *dime;
 }
@@ -511,10 +520,68 @@ Dime resizeThumb(Dime *dime) {
     printf("Thumbnail image\n");
     dime->resWidth = 150;
     dime->resHeight = 150;
-    printf("Enter new name [example.png]: ");
-    scanf("%s", dime->name);
+
+    clearInputBuffer();
+    getName(dime);
 
     return *dime;
+}
+
+void getWidth(Dime *dime) {
+    char input[256];
+    int validInput = 0;
+
+    while (!validInput) {
+        printf("\nEnter WIDTH [pixels]: ");
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+            perror("Error reading input.");
+            exit(EXIT_FAILURE);
+        }
+        if (sscanf(input, "%d", &dime->resWidth) != 1) {
+            printf("Invalid input. Please enter a valid integer.\n");
+            continue;
+        }
+        validInput = 1;
+    }
+}
+
+void getHeight(Dime *dime) {
+    char input[256];
+    int validInput = 0;
+
+    while (!validInput) {
+        printf("\nEnter HEIGHT [pixels]: ");
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+            perror("Error reading input.");
+            exit(EXIT_FAILURE);
+        }
+        if (sscanf(input, "%d", &dime->resHeight) != 1) {
+            printf("Invalid input. Please enter a valid integer.\n");
+            continue;
+        }
+        validInput = 1;
+    }
+}
+
+void getName(Dime *dime) {
+    char input[256];
+    int validInput = 0;
+
+    while (!validInput) {
+        printf("Enter new name [example.png]: ");
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+            perror("Error reading input.");
+            exit(EXIT_FAILURE);
+        }
+        input[strcspn(input, "\n")] = '\0';
+        if (strlen(input) == 0) {
+            printf("Invalid input. Please enter a valid string.\n");
+            validInput = 1;
+        } else {
+            strncpy(dime->name, input, sizeof(dime->name) - 1);
+            validInput = 1;
+        }
+    }
 }
 
 void crop() {
@@ -529,5 +596,10 @@ void quit() {
     reset();
     printf("    Goodbye!\n");
     exit(0);
+}
+
+void clearInputBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 }
 

@@ -36,7 +36,7 @@ make
 sudo make install
 ```
 ## Usage
-To use '**ipl**', simply type '**ipl**' in your terminal, and the program will 
+To use **ipl**, simply type 'ipl' in your terminal, and the program will 
 prompt you to enter the path to the image you want to process.
 ### Usage with Absolute or Relative Paths
 When prompted to enter the image's path, you can use an absolute path, such as 

@@ -3,7 +3,7 @@
 
 CC = gcc
 SRC = imgprocesslib.c
-OUT = imgprocess
+OUT = ipl
 INSTALL_DIR = /usr/local/bin
 
 CFLAGS = -Wall
@@ -16,11 +16,12 @@ $(OUT): $(SRC)
 
 install: $(OUT)
 	install -m 755 $(OUT) $(INSTALL_DIR)
-	cp imgprocess.1 /usr/local/share/man/man1/
-	chmod 644 /usr/local/share/man/man1/imgprocess.1
+	cp ipl.1 /usr/local/share/man/man1/
+	chmod 644 /usr/local/share/man/man1/ipl.1
 
 uninstall:
 	rm -f $(INSTALL_DIR)/$(OUT)
+	rm -f /usr/local/share/man/man1/ipl.1
 
 clean:
 	rm -f $(OUT)

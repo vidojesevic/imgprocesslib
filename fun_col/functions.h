@@ -1,4 +1,4 @@
-/* imgprocess - Image Processing Library  
+/* ipl - Image Processing Library  
 // See LICENSE file for copyright and license details. 
 */
 void printInfo(Pics *img);

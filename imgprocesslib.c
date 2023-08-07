@@ -1,5 +1,5 @@
 /*
- * imgprocess - Simple Image Processing Library for web
+ * ipl - Simple Image Processing Library for web
  * Copyright (C) 2023 Vidoje Šević
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 //Dependencies
 #define STB_IMAGE_IMPLEMENTATION
@@ -34,14 +35,16 @@ typedef struct Picture {
     int height;
     int width;
     int channel;
-    int size;
+    int bitDepth;
+    char bitInfo[64];
+    long size;
     unsigned char* data;
 } Pics;
 
 typedef struct NewDimension {
     int resWidth;
     int resHeight;
-    char name[32];
+    char name[64];
 } Dime;
 
 #ifndef FUNC_COL_H
@@ -74,6 +77,9 @@ typedef enum {
     OPTION_BACK
 } Res;
 
+#define bits_to_MB 1048576
+#define btis_per_pixel 8
+
 int main(int argc, char *argv[]) {
 
     Pics img;
@@ -96,12 +102,13 @@ int main(int argc, char *argv[]) {
     }
     img.path[strcspn(img.path, "\n")] = '\0';
 
-    int width, height, channels;
+    int width, height, channels, bitDepth;
+    char bitInfo[64];
     unsigned char *imgPath = stbi_load(img.path, &width, &height, &channels, 0);
 
     if (imgPath == NULL) {
         reset();
-        fprintf(stderr, "Error: Unable to load image from %s\n", img.path);
+        fprintf(stderr, "Error loading image: %s from '%s'!\n", stbi_failure_reason(), img.path);
         free(img.data); // Free the allocated memory before exiting
         exit(EXIT_FAILURE);
     }
@@ -115,14 +122,72 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    // Calculate image size in KiB
+
+    // Detect bit per color
+    if (channels == 1) {
+        bitDepth = 1;
+        printf("Bit depth is %d\n", bitDepth);
+    } else if (channels == 3) {
+        bitDepth = 8;
+        printf("Bit depth is %d\n", bitDepth);
+    } else if (channels == 4) {
+        bitDepth = 32;
+        printf("Bit depth is %d\n", bitDepth);
+    } else {
+        // For other channel counts, we'll check the actual bit depth using stbi_info
+        int bpp = stbi_info(img.path, &width, &height, &bitDepth);
+        if (bpp == 8) {
+            bitDepth = 8;
+            printf("Bit depth is %d\n", bitDepth);
+        }
+        else if (bpp == 16) {
+            bitDepth = 16;
+            printf("Bit depth is %d\n", bitDepth);
+        }
+        else if (bpp == 24) {
+            bitDepth = 24;
+            printf("Bit depth is %d\n", bitDepth);
+        }
+        else {
+            bitDepth = 0;
+            printf("Bit depth is %d\n", bitDepth);
+        }
+    }
+
     // Copy the loaded image data to the allocated memory
     memcpy(img.data, imgPath, width * height * channels);
 
     stbi_image_free(imgPath);
 
+    if (bitDepth == 1) {
+        strcpy(bitInfo, "1-bit/color (1 channel).");
+    } else if (bitDepth == 8) {
+        strcpy(bitInfo, "8-bit/color (RGB or grayscale, 3 channels)");
+    } else if (bitDepth == 16) {
+        strcpy(bitInfo, "16-bit/color (RGB, 3 channels)");
+    } else if (bitDepth == 24) {
+        strcpy(bitInfo, "24-bit/color (RGB, 3 channels)");
+    } else if (bitDepth == 32) {
+        strcpy(bitInfo, "32-bit/color (RGBA, 4 channels)");
+    } else {
+        strcpy(bitInfo, "Unable to determine the bit depth of the image!");
+    }
+    
+    struct stat st;
+    long fileSize;
+    if (stat(img.path, &st) == 0) {
+        fileSize = st.st_size;
+    } else {
+        fileSize = 0;
+    }
+
     img.width = width;
     img.height = height;
     img.channel = channels;
+    img.bitDepth = bitDepth;
+    strcpy(img.bitInfo, bitInfo);
+    img.size = fileSize;
 
     // printf("img.data = %s\n", img.data);
     printInfo(&img);
@@ -162,13 +227,12 @@ int main(int argc, char *argv[]) {
 }
 
 void printInfo(Pics *img){
-    printf("Your path to picture is %s\n", img->path);
     printf("Image informations:\n");
-    printf("Width: %d px  /  Height: %d px  /  Channel: %d\n", img->width, img->height, img->channel);
+    printf("Width: %d px | Height: %d px | %s | Size: %ld KiB\n", img->width, img->height, img->bitInfo, img->size / 1024);
 }
 
 void printResInfo(Dime *dime){
-    printf("New dimensions: Width: %d px  /  Height: %d px\n", dime->resWidth, dime->resHeight);
+    printf("New dimensions: Width: %d px  |  Height: %d px\n", dime->resWidth, dime->resHeight);
 }
 
 void printMenu() {
@@ -270,8 +334,12 @@ void resize(Pics *img, Dime *dime) {
                     printf("Image NOT saved!\n");
                 }
                 if(sv == 'Y' || sv == 'y') {
-                    int newSize = dime->resWidth * dime->resHeight * img->channel;
-                    printf("New photo size is %d B\n", newSize);
+                    int newPx = dime->resWidth * dime->resHeight * img->channel;
+                    // int bytesPx = 
+
+                    float newSizeMB = newPx / bits_to_MB;
+                    printf("New photo size in Bytes is %d B\n", newPx);
+                    printf("New photo size is %f MB\n", newSizeMB);
                     unsigned char* resizedData = performResize(img->data, img->width, img->height, img->channel, dime->resWidth, dime->resHeight);
 
                     if (resizedData == NULL) {

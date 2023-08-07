@@ -23,15 +23,15 @@ To install ipl, follow the steps below:
 ```
 git clone https://github.com/vidojesevic/imgprocesslib
 ```
-3. Change into the project directory:<br />
+2. Change into the project directory:<br />
 ```
 cd imgprocesslib
 ```
-4. Compile the code:<br />
+3. Compile the code:<br />
 ```
 make
 ```
-5. Install the program globally (you may need to use sudo):<br />
+4. Install the program globally (you may need to use sudo):<br />
 ```
 sudo make install
 ```

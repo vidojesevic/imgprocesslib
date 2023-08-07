@@ -14,7 +14,7 @@ images for use on websites and other applications.
 
 ## Requirements
 - GCC (GNU Compiler Collection)
-- C Standard Library
+- GNU Make
 - stb_image.h (Included in the repository)
 
 ## Installation guide

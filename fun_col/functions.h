@@ -5,6 +5,7 @@ void printInfo(Pics *img);
 void printResInfo(Dime *dime);
 void printMenu();
 void printResMenu();
+char* calcSize(const char* result);
 void resize(Pics *img, Dime *dime);
 unsigned char* performResize(unsigned char* imageData, int width, int height, int channel, int newWidth, int newHeight);
 Dime resizeBack(Dime *dime);

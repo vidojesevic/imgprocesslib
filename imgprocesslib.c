@@ -37,7 +37,7 @@ typedef struct Picture {
     int channel;
     int bitDepth;
     char bitInfo[64];
-    long size;
+    char *size;
     unsigned char* data;
 } Pics;
 
@@ -103,6 +103,7 @@ int main(int argc, char *argv[]) {
     img.path[strcspn(img.path, "\n")] = '\0';
 
     int width, height, channels, bitDepth;
+    char *fileSize;
     char bitInfo[64];
     unsigned char *imgPath = stbi_load(img.path, &width, &height, &channels, 0);
 
@@ -127,31 +128,24 @@ int main(int argc, char *argv[]) {
     // Detect bit per color
     if (channels == 1) {
         bitDepth = 1;
-        printf("Bit depth is %d\n", bitDepth);
     } else if (channels == 3) {
         bitDepth = 8;
-        printf("Bit depth is %d\n", bitDepth);
     } else if (channels == 4) {
         bitDepth = 32;
-        printf("Bit depth is %d\n", bitDepth);
     } else {
         // For other channel counts, we'll check the actual bit depth using stbi_info
         int bpp = stbi_info(img.path, &width, &height, &bitDepth);
         if (bpp == 8) {
             bitDepth = 8;
-            printf("Bit depth is %d\n", bitDepth);
         }
         else if (bpp == 16) {
             bitDepth = 16;
-            printf("Bit depth is %d\n", bitDepth);
         }
         else if (bpp == 24) {
             bitDepth = 24;
-            printf("Bit depth is %d\n", bitDepth);
         }
         else {
             bitDepth = 0;
-            printf("Bit depth is %d\n", bitDepth);
         }
     }
 
@@ -174,13 +168,7 @@ int main(int argc, char *argv[]) {
         strcpy(bitInfo, "Unable to determine the bit depth of the image!");
     }
     
-    struct stat st;
-    long fileSize;
-    if (stat(img.path, &st) == 0) {
-        fileSize = st.st_size;
-    } else {
-        fileSize = 0;
-    }
+    fileSize = calcSize(img.path);
 
     img.width = width;
     img.height = height;
@@ -228,11 +216,11 @@ int main(int argc, char *argv[]) {
 
 void printInfo(Pics *img){
     printf("Image informations:\n");
-    printf("Width: %d px | Height: %d px | %s | Size: %ld KiB\n", img->width, img->height, img->bitInfo, img->size / 1024);
+    printf("Width: %d px | Height: %d px | %s | Size: %s\n", img->width, img->height, img->bitInfo, img->size);
 }
 
 void printResInfo(Dime *dime){
-    printf("New dimensions: Width: %d px  |  Height: %d px\n", dime->resWidth, dime->resHeight);
+    printf("New dimensions: Width: %d px | Height: %d px\n", dime->resWidth, dime->resHeight);
 }
 
 void printMenu() {
@@ -254,7 +242,7 @@ void printResMenu() {
     printf("\t%d Favicon [16 x 16] \\ [1:1]\n", OPTION_FAVICON);
     printf("\t%d Social Media Icon [32 x 32] \\ [1:1]\n", OPTION_SOCIAL);
     printf("\t%d Lightbox image (Full Screen) [1600 x 500] \\ [16:9]\n", OPTION_LIGHTBOX);
-    printf("\t%d Thumbnail image [150 x 150t ] \\ [1:1]\n", OPTION_THUMBNAIL);
+    printf("\t%d Thumbnail image [150 x 150 ] \\ [1:1]\n", OPTION_THUMBNAIL);
     printf("\t%d Custom resize image\n", OPTION_CUSTOM);
     printf("\t%d Back to main menu\n", OPTION_BACK);
 }
@@ -334,12 +322,12 @@ void resize(Pics *img, Dime *dime) {
                     printf("Image NOT saved!\n");
                 }
                 if(sv == 'Y' || sv == 'y') {
-                    int newPx = dime->resWidth * dime->resHeight * img->channel;
-                    // int bytesPx = 
-
-                    float newSizeMB = newPx / bits_to_MB;
-                    printf("New photo size in Bytes is %d B\n", newPx);
-                    printf("New photo size is %f MB\n", newSizeMB);
+                    // int newPx = dime->resWidth * dime->resHeight * img->channel;
+                    // // int bytesPx = 
+                    //
+                    // float newSizeMB = newPx / bits_to_MB;
+                    // printf("New photo size in Bytes is %d B\n", newPx);
+                    // printf("New photo size is %f MB\n", newSizeMB);
                     unsigned char* resizedData = performResize(img->data, img->width, img->height, img->channel, dime->resWidth, dime->resHeight);
 
                     if (resizedData == NULL) {
@@ -385,12 +373,36 @@ unsigned char* performResize(unsigned char* imageData, int width, int height, in
 
 void saveImage(unsigned char* imageData, int width, int height, int channel, const char* filename) {
     int result = stbi_write_png(filename, width, height, channel, imageData, width * channel);
+    char *sizeChar;
 
     if (result == 0) {
         printf("Error saving image to %s.\n", filename);
     } else {
-        printf("Image saved to %s!\n", filename);
+        sizeChar = calcSize(filename);
+        printf("Image saved to %s! Size: %s!\n", filename, sizeChar);
     }
+}
+
+char* calcSize(const char* filename) {
+    long fileSize;
+    char sizeChar[32];
+    struct stat st;
+    
+    if (stat(filename, &st) == 0) {
+        fileSize = st.st_size;
+    } else {
+        fileSize = 0;
+    }
+
+    if(fileSize > 1024) {
+        fileSize = fileSize / 1024;
+        snprintf(sizeChar, sizeof(sizeChar), "%ld KiB", fileSize);
+    }
+    else {
+        snprintf(sizeChar, sizeof(sizeChar), "%ld B", fileSize);
+    }
+
+    return strdup(sizeChar);
 }
 
 Dime resizeCustom(Dime *dime) {

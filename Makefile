@@ -2,7 +2,7 @@
 # See LICENSE file for copyright and license details.
 
 CC = gcc
-SRC = imgprocesslib.c
+SRC = ipl.c prompt.c cli.c resize.c
 OUT = ipl
 INSTALL_DIR = /usr/local/bin
 

@@ -92,7 +92,12 @@ void getHeight(Dime *dime);
 void crop();
 void rotate();
 // void performFreeing(Pics *img);
-void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename);
+void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
+void savePNG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
+void saveBMP(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
+void saveTGA(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
+void saveHDR(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
+void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension);
 void quit();
 void clearInputBuffer();
 

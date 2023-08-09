@@ -127,7 +127,7 @@ Pics* getPath(Pics *img) {
 
 void findOutExtension(char *path, char extension[EXT_SIZE]){
     extension[0] = '\0';
-    const char *supportedExtensions[] = {"jpg", "jpeg", "png"};
+    const char *supportedExtensions[] = {"jpg", "jpeg", "png", "bmp", "tga", "hdr"};
     int isValidExtension = 0;
 
     char *ext = strrchr(path, '.');
@@ -136,7 +136,6 @@ void findOutExtension(char *path, char extension[EXT_SIZE]){
         for (int i = 0; i < sizeof(supportedExtensions) / sizeof(supportedExtensions[0]); ++i) {
             if (strcmp(ext, supportedExtensions[i]) == 0) {
                 strncpy(extension, supportedExtensions[i], EXT_SIZE);
-                printf("Extension %s\n", extension);
                 break;
             }
         }
@@ -292,10 +291,32 @@ void getName(Dime *dime) {
             validInput = 1;
         }
     }
+    findOutExtension(dime->name, dime->ext);
 }
 
-void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename) {
-    int result = stbi_write_png(filename, width, height, channel, imageData, width * channel);
+void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension) {
+
+    int result = 0;
+    if (strcmp(extension, "jpg") == 0 || strcmp(extension, "jpeg") == 0) {
+        saveJPG(imageData, width, height, channel, filename, &result);
+    }
+    if (strcmp(extension, "png") == 0) {
+        savePNG(imageData, width, height, channel, filename, &result);
+    }
+    if (strcmp(extension, "bmp") == 0) {
+        saveBMP(imageData, width, height, channel, filename, &result);
+    }
+    if (strcmp(extension, "tga") == 0) {
+        saveTGA(imageData, width, height, channel, filename, &result);
+    }
+    if (strcmp(extension, "hdr") == 0) {
+        saveHDR(imageData, width, height, channel, filename, &result);
+    } else {
+        printf("Unsupported file extension.\n");
+        return;
+    }
+
+
     char *sizeChar;
 
     if (result == 0) {
@@ -304,6 +325,39 @@ void saveResizedImage(unsigned char* imageData, int width, int height, int chann
         sizeChar = calcSize(filename);
         printf("Image saved to %s! Size: %s!\n", filename, sizeChar);
     }
+}
+
+void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result) {
+    int quality;
+    printf("Enter jpg quality [1-100]\n");
+    scanf("%d", &quality);
+    if (quality > 0 && quality <= 100)
+        *result = stbi_write_jpg(filename, width, height, channel, imageData, quality);
+}
+
+void savePNG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result) {
+    *result = stbi_write_png(filename, width, height, channel, imageData, width * channel);
+}
+
+void saveBMP(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result) {
+    *result = stbi_write_bmp(filename, width, height, channel, imageData);
+}
+
+void saveTGA(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result) {
+    *result = stbi_write_tga(filename, width, height, channel, imageData);
+}
+
+void saveHDR(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result) {
+    float *floatImageData = (float *)malloc(width * height * channel * sizeof(float));
+
+    // Convert unsigned char image data to float
+    for (int i = 0; i < width * height * channel; ++i) {
+        floatImageData[i] = (float)imageData[i] / 255.0f;  // Assuming imageData is in range 0-255
+    }
+
+    *result = stbi_write_hdr(filename, width, height, channel, floatImageData);
+
+    free(floatImageData);
 }
 
 void crop() {

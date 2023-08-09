@@ -26,9 +26,6 @@ void printResInfo(Dime *dime);
 void printMenu();
 void printResMenu();
 int back(int *backToMainMenu);
-void getName(Dime *dime);
-void getWidth(Dime *dime);
-void getHeight(Dime *dime);
 
 #endif
 

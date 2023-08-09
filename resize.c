@@ -21,9 +21,12 @@
 #include <string.h>
 #include <sys/stat.h>
 #include "resize.h"
+#include "prompt.h"
 
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb/stb_image_resize.h"
+
+void stbi_image_free(void *data);
 
 void resize(Pics *img, Dime *dime) {
     int res = 0;
@@ -75,15 +78,16 @@ void resize(Pics *img, Dime *dime) {
                 break;
             case BACK:
                 back(&backToMainMenu);
-                // printResMenu();
-                // // exit(0);
                 break;
         }
 
+        printf("Extension of DIME = %s\n", dime->ext);
         if (backToMainMenu != 1 && res != BACK) {
             printf("Proceed with new dimensions? [Y,n] ");
             scanf("%s", &proc);
+            clearInputBuffer();
 
+            // printf("%d", dime->name);
             if (proc != 'Y' && proc != 'y' && proc != 'n') { 
                 printf("Error %d: Answer with 'Y' or 'n'!\n", errno);
             }
@@ -91,6 +95,7 @@ void resize(Pics *img, Dime *dime) {
                 printResInfo(dime);
                 printf("Save image? [Y,n] ");
                 scanf("%s", &sv);
+                clearInputBuffer();
                 if (sv != 'Y' && sv != 'n' && sv != 'y') {
                     printf("Error %d: Answer with 'Y' or 'n'!\n", errno);
                 }
@@ -99,16 +104,17 @@ void resize(Pics *img, Dime *dime) {
                 }
                 if (sv == 'Y' || sv == 'y') {
                     unsigned char* resizedData = performResize(img->data, img->width, img->height, img->channel, dime->resWidth, dime->resHeight);
-
+             
                     if (resizedData == NULL) {
                         printf("Error resizing image.\n");
                     } else {
-                        performFreeing(img);
+                        // free allocated memory from allocateImg()
+                        stbi_image_free(img->data);
 
                         img->width = dime->resWidth;
                         img->height = dime->resHeight;
                         img->data = resizedData;
-                        saveImage(img->data, img->width, img->height, img->channel, dime->name);
+                        saveResizedImage(img->data, img->width, img->height, img->channel, dime->name);
                     }
                 }
             } else if (proc == 'n') {
@@ -122,8 +128,12 @@ Dime resizeCustom(Dime *dime) {
     printf("Custom dimensions");
     clearInputBuffer();
 
+    printf("\nEnter WIDTH [pixels]: ");
     getWidth(dime);
+
+    printf("Enter HEIGHT [pixels]: ");
     getHeight(dime);
+
     getName(dime);
 
     return *dime;
@@ -169,6 +179,7 @@ Dime resizeBlog(Dime *dime) {
 
     clearInputBuffer();
     getName(dime);
+    findOutExtension(dime->name, dime->ext);
 
     return *dime;
 }
@@ -239,7 +250,7 @@ Dime resizeThumb(Dime *dime) {
     return *dime;
 }
 
-unsigned char* performResize(unsigned char* imageData, int width, int height, int channel, int newWidth, int newHeight) {
+unsigned char* performResize(unsigned char *imageData, int width, int height, int channel, int newWidth, int newHeight) {
     // Allocate memory for the resized image
     unsigned char* resizedData = malloc(newWidth * newHeight * channel);
 

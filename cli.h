@@ -20,7 +20,7 @@
 
 #include "ipl.h" // Include any necessary header files
 
-void parseArguments(int argc, char *argv[]);
+void parseArguments(int argc, char *argv[], Pics img, Input input);
 Action performAction(const Action *action);
 
 #endif

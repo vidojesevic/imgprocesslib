@@ -22,8 +22,24 @@
 #include <sys/stat.h>
 #include "cli.h"
 
-void parseArguments(int argc, char *argv[]) {
+void parseArguments(int argc, char *argv[], Pics img, Input input) {
     printf("You just entered the cli mode!");
+    if (argc == 5 || argc == 9) {
+        // strncpy(img.path, argv[1], sizeof(img.path));
+        // img.path[sizeof(img.path) - 1] = '\0';
+        // imgPath = stbi_load(img.path, &width, &height, &channels, 0);
+        printf("Resize\n");
+
+        // if (imgPath == NULL) {
+        //     // fprintf(stderr, "Error loading image: %s from '%s'!\n", stbi_failure_reason(), img.path);
+        //     // free(img.data); // Free the allocated memory before exiting
+        //     // exit(EXIT_FAILURE);
+        //     printf("Null\n");
+        // }
+
+        // printf("Image path: %s", img.path);
+
+    }
 
 }
 Action performAction(const Action *action) {

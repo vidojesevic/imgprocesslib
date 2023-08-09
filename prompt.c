@@ -83,59 +83,8 @@ void printResMenu() {
     printf("\t%d Back to main menu\n", BACK);
 }
 
-void getWidth(Dime *dime) {
-    char input[256];
-    int validInput = 0;
-
-    while (!validInput) {
-        printf("\nEnter WIDTH [pixels]: ");
-        if (fgets(input, sizeof(input), stdin) == NULL) {
-            perror("Error reading input.");
-            exit(EXIT_FAILURE);
-        }
-        if (sscanf(input, "%d", &dime->resWidth) != 1) {
-            printf("Invalid input. Please enter a valid integer.\n");
-            continue;
-        }
-        validInput = 1;
-    }
-}
-
-void getHeight(Dime *dime) {
-    char input[256];
-    int validInput = 0;
-
-    while (!validInput) {
-        printf("\nEnter HEIGHT [pixels]: ");
-        if (fgets(input, sizeof(input), stdin) == NULL) {
-            perror("Error reading input.");
-            exit(EXIT_FAILURE);
-        }
-        if (sscanf(input, "%d", &dime->resHeight) != 1) {
-            printf("Invalid input. Please enter a valid integer.\n");
-            continue;
-        }
-        validInput = 1;
-    }
-}
-
-void getName(Dime *dime) {
-    char input[256];
-    int validInput = 0;
-
-    while (!validInput) {
-        printf("Enter new name [example.png]: ");
-        if (fgets(input, sizeof(input), stdin) == NULL) {
-            perror("Error reading input.");
-            exit(EXIT_FAILURE);
-        }
-        input[strcspn(input, "\n")] = '\0';
-        if (strlen(input) == 0) {
-            printf("Invalid input. Please enter a valid string.\n");
-            validInput = 1;
-        } else {
-            strncpy(dime->name, input, sizeof(dime->name) - 1);
-            validInput = 1;
-        }
-    }
+int back(int *backToMainMenu) {
+    printf("Going back!\n");
+    *backToMainMenu = 1;
+    return *backToMainMenu;
 }

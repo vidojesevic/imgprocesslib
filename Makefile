@@ -16,12 +16,12 @@ $(OUT): $(SRC)
 
 install: $(OUT)
 	install -m 755 $(OUT) $(INSTALL_DIR)
-	cp ipl.1 /usr/local/share/man/man1/
+	cp -v ipl.1 /usr/local/share/man/man1/
 	chmod 644 /usr/local/share/man/man1/ipl.1
 
 uninstall:
-	rm -f $(INSTALL_DIR)/$(OUT)
-	rm -f /usr/local/share/man/man1/ipl.1
+	rm -fv $(INSTALL_DIR)/$(OUT)
+	rm -fv /usr/local/share/man/man1/ipl.1
 
 clean:
-	rm -f $(OUT)
+	rm -fv $(OUT)

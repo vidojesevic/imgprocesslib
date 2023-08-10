@@ -114,7 +114,7 @@ void resize(Pics *img, Dime *dime) {
                         img->width = dime->resWidth;
                         img->height = dime->resHeight;
                         img->data = resizedData;
-                        saveResizedImage(img->data, img->width, img->height, img->channel, dime->name);
+                        saveResizedImage(img->data, img->width, img->height, img->channel, dime->name, dime->ext);
                     }
                 }
             } else if (proc == 'n') {
@@ -179,7 +179,7 @@ Dime resizeBlog(Dime *dime) {
 
     clearInputBuffer();
     getName(dime);
-    findOutExtension(dime->name, dime->ext);
+    printf("Extension of ddime = %s", dime->ext);
 
     return *dime;
 }

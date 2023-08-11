@@ -20,7 +20,12 @@
 
 #include "ipl.h" // Include any necessary header files
 
-void parseArguments(int argc, char *argv[], Pics img, Input input);
-Action performAction(const Action *action);
+#define NUM_ARGC 11
+
+void parseArguments(int argc, char *argv[], Pics *img, Input *input);
+// Action performAction(const Action *action);
+void printHelp();
+void printVersion();
+void printUnknownOption(char argv[NUM_ARGC], int *i);
 
 #endif

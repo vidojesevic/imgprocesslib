@@ -24,6 +24,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <ctype.h>
+#include <getopt.h>
 #include "ipl.h"
 #include "cli.h"
 #include "prompt.h"
@@ -44,17 +45,10 @@ int main(int argc, char *argv[]) {
     // int bitDepth;
 
     if (argc > 1) {
-        printf("You just enter cli mode\n");
-        // const Action action;
-        // strncpy(action.imagePath, "../img/ban.png");
-        if (argc != 5 && argc != 9) {
-            fprintf(stderr, "Usage: %s <input_path> <operation> ...\n", argv[0]);
-            printf("Try 'ipl --help' or 'ipl --usage' for more information.");
-            return 1; // Non-zero exit code indicating an error
-        }
-        parseArguments(argc, argv, img, input);
-        // performAction(&action);
+        // If user call ./ipl with more than 1 argv
+        parseArguments(argc, argv, &img, &input);
     } else {
+        // prompt mode
         int option = 0;
         printf("Welcome to simple Image Processing Library for web!\n");
         printf("In few quick steps your image will be ready for fast rendered website!\n");
@@ -64,12 +58,9 @@ int main(int argc, char *argv[]) {
         // Checking if path is correct
         getPath(&img);
 
-        // printf("DEBUGING FILESIZE: %ld\n", fileSize);
-        // char bitInfo[64];
-
         allocateImg(img.path, &input, &imgData);
-        // Calculate image size in KiB
 
+        // Calculate image size in KiB
         getSize(img.path, &input, input.channels, &fileSize);
 
         // Copy the loaded image data to the allocated memory
@@ -81,7 +72,6 @@ int main(int argc, char *argv[]) {
         strcpy(img.bitInfo, input.bitInfo);
         img.size = fileSize;
 
-        // printf("img.data = %s\n", img.data);
         printInfo(&img);
         
         size_t m = strlen(img.ext);
@@ -145,7 +135,7 @@ void findOutExtension(char *path, char extension[EXT_SIZE]){
     }
 
     if (isValidExtension != 0) {
-        fprintf(stderr, "Unsupported file extension. Supported formats: .jpg, .jpeg, .png\n");
+        fprintf(stderr, "Unsupported file extension. Supported formats: .jpg, .jpeg, .png, .bmp, .tga, .hdr!\n");
         exit(EXIT_FAILURE);
     }
 }

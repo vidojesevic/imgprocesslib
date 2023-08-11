@@ -20,30 +20,82 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <getopt.h>
 #include "cli.h"
 
-void parseArguments(int argc, char *argv[], Pics img, Input input) {
-    printf("You just entered the cli mode!");
-    if (argc == 5 || argc == 9) {
-        // strncpy(img.path, argv[1], sizeof(img.path));
-        // img.path[sizeof(img.path) - 1] = '\0';
-        // imgPath = stbi_load(img.path, &width, &height, &channels, 0);
-        printf("Resize\n");
 
-        // if (imgPath == NULL) {
-        //     // fprintf(stderr, "Error loading image: %s from '%s'!\n", stbi_failure_reason(), img.path);
-        //     // free(img.data); // Free the allocated memory before exiting
-        //     // exit(EXIT_FAILURE);
-        //     printf("Null\n");
-        // }
-
-        // printf("Image path: %s", img.path);
-
+void parseArguments(int argc, char *argv[], Pics *img, Input *input) {
+    if (argc == 2) {
+        int i = argc - 1;
+        if (strcmp(argv[i], "-h") != 0 && strcmp(argv[i], "--help") != 0 && strcmp(argv[i], "-v") != 0 && strcmp(argv[i], "--version") != 0) {
+            printUnknownOption(argv[i], &i);
+            printHelp();
+            return;
+        }
+        if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
+            printHelp();
+        }
+        if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
+            printVersion();
+        }
+    } 
+    if (argc > 2) {
+        // 
+        // Handle other logic for image processing options
+        // Implement the logic in your parseArguments function
+        printf("Lets do some resize!\n");
     }
 
 }
-Action performAction(const Action *action) {
-    printf("Hello there!");
-    Action reaction;
-    return reaction;
+
+// Action performAction(const Action *action) {
+//     printf("Hello there!");
+// }
+
+void printHelp() {
+    printf("Usage: ");
+    printf("ipl [Options] <Input_path> <Operations> <Operation options> <Output_path>\n");
+    printf("Image Processing Library, simple processing tool for web developers\n");
+    printf("\nOptions:\n");
+    printf("  NULL\tIf the program is called without any arguments, it enters the prompt mode.\n");
+    printf("  -h, --help\tGet help about usage of program\n");
+    printf("  -v, --version\tGet information about version of program\n");
+    printf("\nOperations:\n");
+    printf("  -r\tResize image file\n");
+    printf("  -c\tCrop a specific region from an image\n");
+    printf("  -f\tRotate (flip) image file\n");
+    printf("Resize options:\n");
+    printf("  --background\tBackground image [1920 x 1080] / [16:9]\n");
+    printf("  --hero\tHero image [1280 x 720] / [16:9]\n");
+    printf("  --web-banner\tWebsite banner [250 x 250] / [1:1]\n");
+    printf("  --blog\tBlog image [1200 x 630] / [3:2]\n");
+    printf("  --logo-rec\tLogo rectangle [250 x 100] / [2:3]\n");
+    printf("  --logo-sq\tLogo square [100 x 100] / [1:1]\n");
+    printf("  --favicon\tFavicon [16 x 16] / [1:1]\n");
+    printf("  --social\tSocial Media Icon [32 x 32] / [1:1]\n");
+    printf("  --lightbox\tLightbox image (Full Screen) [1600 x 500] / [16:9]\n");
+    printf("  --thumb\tThumbnail image [150 x 150 ] / [1:1]\n");
+    printf("  --custom\tCustom resize image\n");
+    printf("Custom resize:\n");
+    printf("  -w\t\twidth, provide number in px\n");
+    printf("  -h\t\theight, provide number in px\n");
+    printf("Special case:\n");
+    printf("  -q\t\tIf working with .img output, you can provide qouality number [1-100], \nelse quality defaults is 80\n");
+    printf("\nUsage examples:\n");
+    printf("  ipl image.jpg -r --background output.jpg -q 80\n");
+    printf("  ipl image.png -r --custom -w 1200 -h 900 output.png\n");
+    printf("  ipl image.png -c --x 100 --y 100 --width 300 --height 300 output.png\n");
+    printf("  ipl image.jpg -f --angle 90 output.jpg\n");
+    printf("\nBug Reporting:\n");
+    printf("If you encounter any bugs or issues while using ipl, please report them to \n<vidoje.sevic.275.19@ict.edu.rs>. Your feedback is valuable in improving the tool.\n");
 }
+
+void printVersion() {
+    printf("ipl (Image Processing Library) v0.23\n");
+}
+
+void printUnknownOption(char argv[NUM_ARGC], int *i) {
+    printf("Unknown option: %s\n", argv);
+    // (*i)++;
+}
+

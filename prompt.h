@@ -21,11 +21,14 @@
 #include "ipl.h" // Include any necessary header files
 
 void promptMode(Pics *img, Dime *dime, int option);
+void resizePrompt(Pics *img, Dime *dime);
+void checkName(Pics* img);
 void printInfo(Pics *img);
 void printResInfo(Dime *dime);
 void printMenu();
 void printResMenu();
 int back(int *backToMainMenu);
+void quit();
 
 #endif
 

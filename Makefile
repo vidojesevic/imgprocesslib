@@ -6,7 +6,7 @@ SRC = ipl.c prompt.c cli.c resize.c
 OUT = ipl
 INSTALL_DIR = /usr/local/bin
 
-CFLAGS = -Wall
+CFLAGS = -g -Wall
 LDFLAGS = -lm
 		 
 all: $(OUT)

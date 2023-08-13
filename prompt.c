@@ -35,7 +35,7 @@ void promptMode(Pics *img, Dime *dime, int option) {
         }
         switch (option) {
             case RESIZE:
-                resize(img, dime);
+                resizePrompt(img, dime);
                 break;
             case CROP:
                 crop();
@@ -50,9 +50,122 @@ void promptMode(Pics *img, Dime *dime, int option) {
     }
 }
 
+void resizePrompt(Pics *img, Dime *dime) {
+    int res = 0;
+    int backToMainMenu = 0;
+    char proc, sv;
+    while (res != BACK) {
+        printResMenu();
+        printf("Resize option number: ");
+        scanf("%d", &res);
+        while (res < BACKGR || res > BACK) {
+            printf("Error number: %d\nOption must be in range [%d-%d]\n", errno, BACKGR, BACK);
+            printResMenu();
+            scanf("%d", &res);
+        }
+        switch (res) {
+            case BACKGR:
+                resizeBack(dime);
+                clearInputBuffer();
+                break;
+            case HERO:
+                resizeHero(dime);
+                clearInputBuffer();
+                break;
+            case BANNER:
+                resizeBanner(dime);
+                clearInputBuffer();
+                break;
+            case BLOG:
+                resizeBlog(dime);
+                clearInputBuffer();
+                break;
+            case LOGOREC:
+                resizeLogoRec(dime);
+                clearInputBuffer();
+                break;
+            case LOGOSC:
+                resizeLogoSc(dime);
+                clearInputBuffer();
+                break;
+            case FAVICON:
+                resizeFavicon(dime);
+                clearInputBuffer();
+                break;
+            case SOCIAL:
+                resizeSocial(dime);
+                clearInputBuffer();
+                break;
+            case LIGHTBOX:
+                resizeLight(dime);
+                clearInputBuffer();
+                break;
+            case THUMBNAIL:
+                resizeThumb(dime);
+                clearInputBuffer();
+                break;
+            case CUSTOM:
+                clearInputBuffer();
+                resizeCustom(dime);
+                break;
+            case BACK:
+                back(&backToMainMenu);
+                return;
+                break;
+        }
+
+        getName(dime);
+
+        if (backToMainMenu != 1 && res != BACK) {
+            printf("Proceed with new dimensions? [Y,n] ");
+            scanf("%s", &proc);
+
+            // printf("%d", dime->name);
+            if (proc != 'Y' && proc != 'y' && proc != 'n') {
+                printf("Error %d: Answer with 'Y' or 'n'!\n", errno);
+            }
+            if (proc == 'Y' || proc == 'y') {
+                printResInfo(dime);
+                printf("Save image? [Y,n] ");
+                scanf("%s", &sv);
+                clearInputBuffer();
+                if (sv != 'Y' && sv != 'n' && sv != 'y') {
+                    printf("Error %d: Answer with 'Y' or 'n'!\n", errno);
+                }
+                if (sv == 'n') {
+                    printf("Image NOT saved!\n");
+                }
+                if (sv == 'Y' || sv == 'y') {
+                    resize(img, dime);
+                }
+            }
+        }
+        if (proc == 'n') {
+            printInfo(img);
+        }
+    }
+
+}
+
+void checkName(Pics* img) {
+    if (fgets(img->path, PATH_SIZE, stdin) == NULL) {
+        perror("Error: Bad user input!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    size_t length = strlen(img->path);
+    if (length > 0 && img->path[length - 1] == '\n') {
+        img->path[length - 1] = '\0';
+    } else {
+        fprintf(stderr, "Input too long, consider increasing the buffer size.\n");
+        // clearInputBuffer();
+        exit(EXIT_FAILURE);
+    }
+}
+
 void printInfo(Pics *img){
     printf("Image informations:\n");
-    printf("Width: %d px | Height: %d px | %s | Size: %s\n", img->width, img->height, img->bitInfo, img->size);
+    printf("Dimensions: %d x %d | %s | Size: %s\n", img->width, img->height, img->bitInfo, img->size);
 }
 
 void printResInfo(Dime *dime){
@@ -87,4 +200,9 @@ int back(int *backToMainMenu) {
     printf("Going back!\n");
     *backToMainMenu = 1;
     return *backToMainMenu;
+}
+
+void quit() {
+    printf("    Goodbye!\n");
+    exit(0);
 }

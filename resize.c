@@ -29,223 +29,98 @@
 void stbi_image_free(void *data);
 
 void resize(Pics *img, Dime *dime) {
-    int res = 0;
-    int backToMainMenu = 0;
-    char proc, sv;
-    // printf("    Resize image\n");
-    while (res != BACK) { 
-        printResMenu();
-        printf("Resize option number: ");
-        scanf("%d", &res);
-        while (res < BACKGR || res > BACK) {
-            printf("Error number: %d\nOption must be in range [%d-%d]\n", errno, BACKGR, BACK);
-            printResMenu();
-            scanf("%d", &res);
-        }
-        switch (res) {
-            case BACKGR:
-                resizeBack(dime);
-                break;
-            case HERO:
-                resizeHero(dime);
-                break;
-            case BANNER:
-                resizeBanner(dime);
-                break;
-            case BLOG:
-                resizeBlog(dime);
-                break;
-            case LOGOREC:
-                resizeLogoRec(dime);
-                break;
-            case LOGOSC:
-                resizeLogoSc(dime);
-                break;
-            case FAVICON:
-                resizeFavicon(dime);
-                break;
-            case SOCIAL:
-                resizeSocial(dime);
-                break;
-            case LIGHTBOX:
-                resizeLight(dime);
-                break;
-            case THUMBNAIL:
-                resizeThumb(dime);
-                break;
-            case CUSTOM:
-                resizeCustom(dime);
-                break;
-            case BACK:
-                back(&backToMainMenu);
-                break;
-        }
+    unsigned char* resizedData = performResize(img->data, img->width, img->height, img->channel, dime->resWidth, dime->resHeight);
 
-        printf("Extension of DIME = %s\n", dime->ext);
-        if (backToMainMenu != 1 && res != BACK) {
-            printf("Proceed with new dimensions? [Y,n] ");
-            scanf("%s", &proc);
-            clearInputBuffer();
+    if (resizedData == NULL) {
+        printf("Error resizing image.\n");
+    } 
+    if (resizedData != NULL) {
+        // free allocated memory from allocateImg()
+        stbi_image_free(img->data);
 
-            // printf("%d", dime->name);
-            if (proc != 'Y' && proc != 'y' && proc != 'n') { 
-                printf("Error %d: Answer with 'Y' or 'n'!\n", errno);
-            }
-            if (proc == 'Y' || proc == 'y') {
-                printResInfo(dime);
-                printf("Save image? [Y,n] ");
-                scanf("%s", &sv);
-                clearInputBuffer();
-                if (sv != 'Y' && sv != 'n' && sv != 'y') {
-                    printf("Error %d: Answer with 'Y' or 'n'!\n", errno);
-                }
-                if (sv == 'n') {
-                    printf("Image NOT saved!\n");
-                }
-                if (sv == 'Y' || sv == 'y') {
-                    unsigned char* resizedData = performResize(img->data, img->width, img->height, img->channel, dime->resWidth, dime->resHeight);
-             
-                    if (resizedData == NULL) {
-                        printf("Error resizing image.\n");
-                    } else {
-                        // free allocated memory from allocateImg()
-                        stbi_image_free(img->data);
-
-                        img->width = dime->resWidth;
-                        img->height = dime->resHeight;
-                        img->data = resizedData;
-                        saveResizedImage(img->data, img->width, img->height, img->channel, dime->name, dime->ext);
-                    }
-                }
-            } else if (proc == 'n') {
-                printInfo(img);
-            }
-        }
+        img->width = dime->resWidth;
+        img->height = dime->resHeight;
+        img->data = resizedData;
+        saveResizedImage(img->data, img->width, img->height, img->channel, dime->name, dime->ext);
     }
 }
 
 Dime resizeCustom(Dime *dime) {
-    printf("Custom dimensions");
-    clearInputBuffer();
-
-    printf("\nEnter WIDTH [pixels]: ");
+    printf("Enter WIDTH [pixels]: ");
     getWidth(dime);
 
     printf("Enter HEIGHT [pixels]: ");
     getHeight(dime);
 
-    getName(dime);
-
     return *dime;
 }
 
 Dime resizeBack(Dime *dime) {
-    printf("Background image\n");
     dime->resWidth = 1920;
     dime->resHeight = 1080;
-
-    clearInputBuffer();
-    getName(dime);
 
     return *dime;
 }
 
 Dime resizeHero(Dime *dime) {
-    printf("Background image\n");
     dime->resWidth = 1280;
     dime->resHeight = 720;
-
-    clearInputBuffer();
-    getName(dime);
 
     return *dime;
 }
 
 Dime resizeBanner(Dime *dime) {
-    printf("Website banner\n");
     dime->resWidth = 250;
     dime->resHeight = 250;
-
-    clearInputBuffer();
-    getName(dime);
 
     return *dime;
 }
 
 Dime resizeBlog(Dime *dime) {
-    printf("Blog image\n");
     dime->resWidth = 1200;
     dime->resHeight = 630;
-
-    clearInputBuffer();
-    getName(dime);
-    printf("Extension of ddime = %s", dime->ext);
 
     return *dime;
 }
 
 Dime resizeLogoRec(Dime *dime) {
-    printf("Logo rectangle\n");
     dime->resWidth = 250;
     dime->resHeight = 100;
-
-    clearInputBuffer();
-    getName(dime);
 
     return *dime;
 }
 
 Dime resizeLogoSc(Dime *dime) {
-    printf("Logo square\n");
     dime->resWidth = 100;
     dime->resHeight = 100;
-
-    clearInputBuffer();
-    getName(dime);
 
     return *dime;
 }
 
 Dime resizeFavicon(Dime *dime) {
-    printf("Favicon\n");
     dime->resWidth = 16;
     dime->resHeight = 16;
-
-    clearInputBuffer();
-    getName(dime);
 
     return *dime;
 }
 
 Dime resizeSocial(Dime *dime) {
-    printf("Social media icon\n");
     dime->resWidth = 32;
     dime->resHeight = 32;
-
-    clearInputBuffer();
-    getName(dime);
 
     return *dime;
 }
 
 Dime resizeLight(Dime *dime) {
-    printf("Lightbox image\n");
     dime->resWidth = 1600;
     dime->resHeight = 500;
-
-    clearInputBuffer();
-    getName(dime);
 
     return *dime;
 }
 
 Dime resizeThumb(Dime *dime) {
-    printf("Thumbnail image\n");
     dime->resWidth = 150;
     dime->resHeight = 150;
-
-    clearInputBuffer();
-    getName(dime);
 
     return *dime;
 }
@@ -262,7 +137,7 @@ unsigned char* performResize(unsigned char *imageData, int width, int height, in
         free(resizedData);
         return NULL; // Return NULL to indicate failure
     }
-    printf("Successfully changed dimensions! ");
+    printf("Successfully changed dimensions!\n");
 
     return resizedData; // Return the resized image data
 }

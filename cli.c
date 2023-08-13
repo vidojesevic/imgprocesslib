@@ -22,7 +22,11 @@
 #include <sys/stat.h>
 #include <getopt.h>
 #include "cli.h"
+#include "resize.h"
 
+unsigned char *imgData;
+char *fileSize;
+Dime dime;
 
 void parseArguments(int argc, char *argv[], Pics *img, Input *input) {
     if (argc == 2) {
@@ -34,28 +38,109 @@ void parseArguments(int argc, char *argv[], Pics *img, Input *input) {
         }
         if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             printHelp();
+            return;
         }
         if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
             printVersion();
+            return;
         }
     } 
-    if (argc > 2) {
-        // 
-        // Handle other logic for image processing options
-        // Implement the logic in your parseArguments function
-        printf("Lets do some resize!\n");
-    }
 
+    if (argc > 2) {
+        char *path = argv[1];
+        strncpy(img->path, path, PATH_SIZE);
+        getPath(img);
+
+        allocateImg(img->path, input, &imgData);
+
+        // Calculate image size in KiB
+        getSize(img->path, input, &fileSize);
+
+        // Copy the loaded image data to the allocated memory
+        img->data = input->data;
+        img->width = input->width;
+        img->height = input->height;
+        img->channel = input->channels;
+        img->bitDepth = input->bitDepth;
+        strcpy(img->bitInfo, input->bitInfo);
+        img->size = fileSize;
+
+        // printf("Name %s, width: %d, height: %d, channel: %d, size %s\n", img->path, img->width, img->height, img->channel, img->size);
+
+        char *cli_option = argv[2];
+
+        if (strcmp(cli_option, "-r") == 0) {
+            resizeCLI(img, &dime, argc, argv);
+        }
+        if (strcmp(cli_option, "-c") == 0) {
+            printf("Crop\n");
+        }
+        if (strcmp(cli_option, "-f") == 0) {
+            printf("Rotate\n");
+        }
+
+    }
+    free(fileSize);
 }
 
-// Action performAction(const Action *action) {
-//     printf("Hello there!");
-// }
+void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]) {
+    char *resizeOption = argv[3];
+
+    if (strcmp(resizeOption, "--background") == 0) {
+        resizeBack(dime);
+        strcpy(dime->name, argv[4]);
+        findOutExtension(dime->name, dime->ext);
+        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
+        resize(img, dime);
+    }
+    if (strcmp(resizeOption, "--hero") == 0) {
+        resizeHero(dime);
+        strcpy(dime->name, argv[4]);
+        findOutExtension(dime->name, dime->ext);
+        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
+        resize(img, dime);
+    }
+    if (strcmp(resizeOption, "--web-banner") == 0) {
+        resizeBanner(dime);
+        strcpy(dime->name, argv[4]);
+        findOutExtension(dime->name, dime->ext);
+        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
+        resize(img, dime);
+    }
+    if (strcmp(resizeOption, "--blog") == 0) {
+        resizeBlog(dime);
+        strcpy(dime->name, argv[4]);
+        findOutExtension(dime->name, dime->ext);
+        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
+        resize(img, dime);
+    }
+    if (strcmp(resizeOption, "--logo-rec") == 0) {
+        resizeLogoRec(dime);
+        strcpy(dime->name, argv[4]);
+        findOutExtension(dime->name, dime->ext);
+        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
+        resize(img, dime);
+    }
+    if (strcmp(resizeOption, "--logo-sq") == 0) {
+        resizeLogoSc(dime);
+        strcpy(dime->name, argv[4]);
+        findOutExtension(dime->name, dime->ext);
+        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
+        resize(img, dime);
+    }
+    if (strcmp(resizeOption, "--favicon") == 0) {
+        resizeFavicon(dime);
+        strcpy(dime->name, argv[4]);
+        findOutExtension(dime->name, dime->ext);
+        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
+        resize(img, dime);
+    }
+}
 
 void printHelp() {
     printf("Usage: ");
-    printf("ipl [Options] <Input_path> <Operations> <Operation options> <Output_path>\n");
-    printf("Image Processing Library, simple processing tool for web developers\n");
+    printf("ipl [Options] / ipl <Input_path> <Operations> <Operation options> <Output_path>\n");
+    printf("  Image Processing Library, simple processing tool for web developers\n");
     printf("\nOptions:\n");
     printf("  NULL\tIf the program is called without any arguments, it enters the prompt mode.\n");
     printf("  -h, --help\tGet help about usage of program\n");
@@ -80,7 +165,7 @@ void printHelp() {
     printf("  -w\t\twidth, provide number in px\n");
     printf("  -h\t\theight, provide number in px\n");
     printf("Special case:\n");
-    printf("  -q\t\tIf working with .img output, you can provide qouality number [1-100], \nelse quality defaults is 80\n");
+    printf("  -q\t\tIf working with .img output, you can provide quality number [1-100], \nelse quality defaults is 80\n");
     printf("\nUsage examples:\n");
     printf("  ipl image.jpg -r --background output.jpg -q 80\n");
     printf("  ipl image.png -r --custom -w 1200 -h 900 output.png\n");

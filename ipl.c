@@ -37,10 +37,10 @@
 #include "stb/stb_image_write.h"
 
 int main(int argc, char *argv[]) {
-    unsigned char *imgData;
     Input input;
     Pics img;
     Dime dime;
+    unsigned char *imgData;
     char *fileSize;
     // int bitDepth;
 
@@ -56,12 +56,13 @@ int main(int argc, char *argv[]) {
         printf("Enter path to picture: ");
 
         // Checking if path is correct
+        checkName(&img);
         getPath(&img);
 
         allocateImg(img.path, &input, &imgData);
 
         // Calculate image size in KiB
-        getSize(img.path, &input, input.channels, &fileSize);
+        getSize(img.path, &input, &fileSize);
 
         // Copy the loaded image data to the allocated memory
         img.data = input.data;
@@ -74,34 +75,20 @@ int main(int argc, char *argv[]) {
 
         printInfo(&img);
         
-        size_t m = strlen(img.ext);
-        if (m == 0) {
-            printf("NISTA");
-        }
-
         promptMode(&img, &dime, option);
 
+        // stbi_image_free(imgData);
+        free(imgData);
+        free(fileSize);
+        free(input.data);
+        free(img.data);
     }
 
-    stbi_image_free(imgData);
-    free(input.data);
 
     return 0;
 }
 
 Pics* getPath(Pics *img) {
-    if (fgets(img->path, PATH_SIZE, stdin) == NULL) {
-        perror("Error: Bad user input!\n");
-        exit(EXIT_FAILURE);
-    }
-    size_t length = strlen(img->path);
-    if (length > 0 && img->path[length - 1] == '\n') {
-        img->path[length - 1] = '\0';
-    } else {
-        fprintf(stderr, "Input too long, consider increasing the buffer size.\n");
-        clearInputBuffer();
-        exit(EXIT_FAILURE);
-    }
 
     if (strlen(img->path) == 0) {
         fprintf(stderr, "No input provided. Please enter a valid image path.\n");
@@ -162,15 +149,15 @@ void allocateImg(char *path, Input *input, unsigned char **imgData) {
     stbi_image_free(*imgData);
 }
 
-void getSize(char *path, Input *input, int channels, char **fileSize) {
+void getSize(char *path, Input *input, char **fileSize) {
     // Detect bit per color
     int bpp = stbi_info(path, &input->width, &input->height, &input->bitDepth);
 
-    if (channels == 1) {
+    if (input->channels == 1) {
         input->bitDepth = 1;
-    } else if (channels == 3) {
+    } else if (input->channels == 3) {
         input->bitDepth = 8;
-    } else if (channels == 4) {
+    } else if (input->channels == 4) {
         input->bitDepth = 32;
     } else {
         // For other channel counts, we'll check the actual bit depth using stbi_info
@@ -203,12 +190,16 @@ void getSize(char *path, Input *input, int channels, char **fileSize) {
         strcpy(input->bitInfo, "32-bit/color (RGBA, 4 channels)");
     }
 
+    if (*fileSize != NULL) {
+        free(*fileSize);
+    }
+
     *fileSize = calcSize(path);
 }
 
 char* calcSize(const char* filename) {
     long fileSize;
-    char sizeChar[32];
+    char sizeChar[SIZE];
     struct stat st;
 
     if (stat(filename, &st) == 0) {
@@ -225,11 +216,17 @@ char* calcSize(const char* filename) {
         snprintf(sizeChar, sizeof(sizeChar), "%ld B", fileSize);
     }
 
-    return strdup(sizeChar);
+    char *size = strdup(sizeChar);
+    if (size == NULL) {
+        perror("Error alocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    return size;
 }
 
 void getWidth(Dime *dime) {
-    char input[256];
+    char input[BIT_NAME_SIZE];
     int validInput = 0;
 
     while (!validInput) {
@@ -246,7 +243,7 @@ void getWidth(Dime *dime) {
 }
 
 void getHeight(Dime *dime) {
-    char input[256];
+    char input[BIT_NAME_SIZE];
     int validInput = 0;
 
     while (!validInput) {
@@ -263,7 +260,7 @@ void getHeight(Dime *dime) {
 }
 
 void getName(Dime *dime) {
-    char input[256];
+    char input[BIT_NAME_SIZE];
     int validInput = 0;
 
     while (!validInput) {
@@ -282,6 +279,7 @@ void getName(Dime *dime) {
         }
     }
     findOutExtension(dime->name, dime->ext);
+    // printf("Dime name is %s, ext is %s\n", dime->name, dime->ext);
 }
 
 void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension) {
@@ -301,8 +299,10 @@ void saveResizedImage(unsigned char* imageData, int width, int height, int chann
     }
     if (strcmp(extension, "hdr") == 0) {
         saveHDR(imageData, width, height, channel, filename, &result);
-    } else {
+    } 
+    else {
         printf("Unsupported file extension.\n");
+        free(imageData);
         return;
     }
 
@@ -315,11 +315,12 @@ void saveResizedImage(unsigned char* imageData, int width, int height, int chann
         sizeChar = calcSize(filename);
         printf("Image saved to %s! Size: %s!\n", filename, sizeChar);
     }
+    free(imageData);
 }
 
 void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result) {
     int quality;
-    printf("Enter jpg quality [1-100]\n");
+    printf("Enter jpg quality [1-100]: ");
     scanf("%d", &quality);
     if (quality > 0 && quality <= 100)
         *result = stbi_write_jpg(filename, width, height, channel, imageData, quality);
@@ -347,7 +348,6 @@ void saveHDR(unsigned char* imageData, int width, int height, int channel, const
 
     *result = stbi_write_hdr(filename, width, height, channel, floatImageData);
 
-    free(floatImageData);
 }
 
 void crop() {
@@ -358,10 +358,6 @@ void rotate() {
     printf("    Rotate image\nComming soon...\n");
 }
 
-void quit() {
-    printf("    Goodbye!\n");
-    exit(0);
-}
 
 void clearInputBuffer() {
     int c;

@@ -20,7 +20,8 @@
 
 #define KiloByte 1024
 #define PATH_SIZE 128
-#define BIT_SIZE 64
+#define BIT_NAME_SIZE 64
+#define SIZE 32
 #define EXT_SIZE 16
 
 typedef struct Picture {
@@ -30,7 +31,7 @@ typedef struct Picture {
     int width;
     int channel;
     int bitDepth;
-    char bitInfo[BIT_SIZE];
+    char bitInfo[BIT_NAME_SIZE];
     char *size;
     unsigned char* data;
 } Pics;
@@ -58,11 +59,11 @@ typedef enum {
     QUIT
 } OptionType;
 
-typedef struct {
-    OptionType optionType;
-    char imagePath[256];
-    char background[256];
-} Action;
+// typedef struct {
+//     OptionType optionType;
+//     char imagePath[256];
+//     char background[256];
+// } Action;
 
 typedef enum {
     BACKGR = 1,
@@ -83,7 +84,7 @@ typedef enum {
 Pics* getPath(Pics *img);
 void findOutExtension(char *path, char extension[EXT_SIZE]);
 void allocateImg(char *path, Input *input, unsigned char **imgData);
-void getSize(char *path, Input *input, int channels, char **fileSize);
+void getSize(char *path, Input *input, char **fileSize);
 char* calcSize(const char* result);
 // Crop functions
 void getName(Dime *dime);
@@ -98,7 +99,6 @@ void saveBMP(unsigned char* imageData, int width, int height, int channel, const
 void saveTGA(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
 void saveHDR(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
 void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension);
-void quit();
 void clearInputBuffer();
 
 #endif

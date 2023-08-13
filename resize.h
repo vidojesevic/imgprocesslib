@@ -24,7 +24,6 @@
 
 // Functions
 void resize(Pics *img, Dime *dime);
-unsigned char* performResize(unsigned char* imageData, int width, int height, int channel, int newWidth, int newHeight);
 Dime resizeBack(Dime *dime);
 Dime resizeHero(Dime *dime);
 Dime resizeBanner(Dime *dime);
@@ -36,6 +35,7 @@ Dime resizeSocial(Dime *dime);
 Dime resizeLight(Dime *dime);
 Dime resizeThumb(Dime *dime);
 Dime resizeCustom(Dime *dime);
+unsigned char* performResize(unsigned char* imageData, int width, int height, int channel, int newWidth, int newHeight);
 
 #endif
 

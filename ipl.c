@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <stdbool.h>
 #include <ctype.h>
 #include <getopt.h>
 #include "ipl.h"
@@ -42,7 +43,7 @@ int main(int argc, char *argv[]) {
     Dime dime;
     unsigned char *imgData;
     char *fileSize;
-    // int bitDepth;
+    Crop crop;
 
     if (argc > 1) {
         // If user call ./ipl with more than 1 argv
@@ -75,7 +76,7 @@ int main(int argc, char *argv[]) {
 
         printInfo(&img);
         
-        promptMode(&img, &dime, option);
+        promptMode(&img, &dime, option, &crop);
 
         // stbi_image_free(imgData);
         free(imgData);
@@ -220,6 +221,7 @@ char* calcSize(const char* filename) {
     if (size == NULL) {
         perror("Error alocation failed");
         exit(EXIT_FAILURE);
+        free(size);
     }
 
     return size;
@@ -282,29 +284,50 @@ void getName(Dime *dime) {
     // printf("Dime name is %s, ext is %s\n", dime->name, dime->ext);
 }
 
-void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension) {
+void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality) {
 
     int result = 0;
     if (strcmp(extension, "jpg") == 0 || strcmp(extension, "jpeg") == 0) {
-        saveJPG(imageData, width, height, channel, filename, &result);
-    }
-    if (strcmp(extension, "png") == 0) {
+        saveJPG(imageData, width, height, channel, filename, &result, quality);
+    } else if (strcmp(extension, "png") == 0) {
         savePNG(imageData, width, height, channel, filename, &result);
-    }
-    if (strcmp(extension, "bmp") == 0) {
+    } else if (strcmp(extension, "bmp") == 0) {
         saveBMP(imageData, width, height, channel, filename, &result);
-    }
-    if (strcmp(extension, "tga") == 0) {
+    } else if (strcmp(extension, "tga") == 0) {
         saveTGA(imageData, width, height, channel, filename, &result);
-    }
-    if (strcmp(extension, "hdr") == 0) {
+    } else if (strcmp(extension, "hdr") == 0) {
         saveHDR(imageData, width, height, channel, filename, &result);
-    } 
-    else {
+    } else {
         printf("Unsupported file extension.\n");
         free(imageData);
         return;
     }
+    // switch (extension[0]) {
+    //     case "j":
+    //         if (strcmp(extension, "jpg") == 0 || strcmp(extension, "jpeg") == 0)
+    //             saveJPG(imageData, width, height, channel, filename, &result);
+    //         break;
+    //     case "p":
+    //         if (strcmp(extension, "png") == 0)
+    //             savePNG(imageData, width, height, channel, filename, &result);
+    //         break;
+    //     case "b":
+    //         if (strcmp(extension, "bmp") == 0)
+    //             saveBMP(imageData, width, height, channel, filename, &result);
+    //         break;
+    //     case "t":
+    //         if (strcmp(extension, "tga") == 0)
+    //             saveTGA(imageData, width, height, channel, filename, &result);
+    //         break;
+    //     case "h":
+    //         if (strcmp(extension, "hdr") == 0)
+    //             saveHDR(imageData, width, height, channel, filename, &result);
+    //         break;
+    //     default:
+    //         printf("Unsupported file extension.\n");
+    //         free(imageData);
+    //         return;
+    // }
 
 
     char *sizeChar;
@@ -314,14 +337,14 @@ void saveResizedImage(unsigned char* imageData, int width, int height, int chann
     } else {
         sizeChar = calcSize(filename);
         printf("Image saved to %s! Size: %s!\n", filename, sizeChar);
+        free(sizeChar);
     }
     free(imageData);
 }
 
-void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result) {
-    int quality;
-    printf("Enter jpg quality [1-100]: ");
-    scanf("%d", &quality);
+void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result, int quality) {
+    // printf("Enter jpg quality [1-100]: ");
+    // scanf("%d", &quality);
     if (quality > 0 && quality <= 100)
         *result = stbi_write_jpg(filename, width, height, channel, imageData, quality);
 }

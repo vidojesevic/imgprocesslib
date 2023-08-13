@@ -15,22 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/gpl-3.0.txt>
  * */
-#ifndef PROMPT_H
-#define PROMPT_H
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include "prompt.h"
 
-#include "ipl.h" // Include any necessary header files
+stbi_load(filename, &x, &y, &n, 0);
 
-void promptMode(Pics *img, Dime *dime, int option, Crop *crop);
-void resizePrompt(Pics *img, Dime *dime);
-void checkName(Pics* img);
-void printInfo(Pics *img);
-void printResInfo(Dime *dime);
-void printMenu();
-void printResMenu();
-void getQuality(Dime *dime);
-void cropPrompt(Pics *img, Crop *crop);
-int back(int *backToMainMenu);
-void quit();
-
-#endif
+void cropImage(Pics *img, Crop crop) {
+    printf("CROP\n");
+}
 

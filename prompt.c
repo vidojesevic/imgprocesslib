@@ -22,8 +22,9 @@
 #include <sys/stat.h>
 #include "prompt.h"
 #include "resize.h"
+#include "crop.h"
 
-void promptMode(Pics *img, Dime *dime, int option) {
+void promptMode(Pics *img, Dime *dime, int option, Crop *crop) {
     while (option != QUIT) {
         printMenu();
         printf("Option number: ");
@@ -38,7 +39,7 @@ void promptMode(Pics *img, Dime *dime, int option) {
                 resizePrompt(img, dime);
                 break;
             case CROP:
-                crop();
+                cropPrompt(img, crop);
                 break;
             case ROTATE:
                 rotate();
@@ -115,12 +116,12 @@ void resizePrompt(Pics *img, Dime *dime) {
         }
 
         getName(dime);
+        getQuality(dime);
 
         if (backToMainMenu != 1 && res != BACK) {
             printf("Proceed with new dimensions? [Y,n] ");
             scanf("%s", &proc);
 
-            // printf("%d", dime->name);
             if (proc != 'Y' && proc != 'y' && proc != 'n') {
                 printf("Error %d: Answer with 'Y' or 'n'!\n", errno);
             }
@@ -194,6 +195,28 @@ void printResMenu() {
     printf("\t%d Thumbnail image [150 x 150 ] \\ [1:1]\n", THUMBNAIL);
     printf("\t%d Custom resize image\n", CUSTOM);
     printf("\t%d Back to main menu\n", BACK);
+}
+
+void getQuality(Dime *dime) {
+    int quality;
+    if (strcmp(dime->ext, "jpg") == 0 || strcmp(dime->ext, "jpeg") == 0) {
+        printf("Enter jpg quality [1-100]: ");
+        scanf("%d", &quality);
+        if (quality > 0 && quality <= 100)
+            dime->quality = quality;
+        else {
+            perror("Error value for quality!");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+}
+
+void cropPrompt(Pics *img, Crop *crop) {
+    
+    printf("Crop from prompt\n");
+
+    // cropImage(img, crop);
 }
 
 int back(int *backToMainMenu) {

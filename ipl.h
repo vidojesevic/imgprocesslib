@@ -48,22 +48,22 @@ typedef struct Input {
 typedef struct NewDimension {
     int resWidth;
     int resHeight;
+    int quality;
     char name[64];
     char ext[EXT_SIZE];
 } Dime;
+
+typedef struct Crop { 
+    int x;
+    int y;
+} Crop;
 
 typedef enum {
     RESIZE = 1,
     CROP,
     ROTATE,
     QUIT
-} OptionType;
-
-// typedef struct {
-//     OptionType optionType;
-//     char imagePath[256];
-//     char background[256];
-// } Action;
+} Options;
 
 typedef enum {
     BACKGR = 1,
@@ -93,12 +93,12 @@ void getHeight(Dime *dime);
 void crop();
 void rotate();
 // void performFreeing(Pics *img);
-void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
+void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result, int quality);
 void savePNG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
 void saveBMP(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
 void saveTGA(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
 void saveHDR(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
-void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension);
+void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality);
 void clearInputBuffer();
 
 #endif

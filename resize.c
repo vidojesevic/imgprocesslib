@@ -41,7 +41,7 @@ void resize(Pics *img, Dime *dime) {
         img->width = dime->resWidth;
         img->height = dime->resHeight;
         img->data = resizedData;
-        saveResizedImage(img->data, img->width, img->height, img->channel, dime->name, dime->ext);
+        saveResizedImage(img->data, img->width, img->height, img->channel, dime->name, dime->ext, dime->quality);
     }
 }
 

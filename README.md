@@ -38,6 +38,13 @@ sudo make install
 ## Usage
 To use **ipl**, simply type 'ipl' in your terminal, and the program will 
 prompt you to enter the path to the image you want to process.
+### Usage with CLI Arguments
+You can also use command-line arguments to process images directly from 
+the command line. For example, to resize an image and save it with a 
+specific output name, you can use the following command:
+```
+ipl /path/to/input.png -r --favicon /path/to/output.png
+```
 ### Usage with Absolute or Relative Paths
 When prompted to enter the image's path, you can use an absolute path, such as 
 '/absolute/path/to/image.png/', or a relative path from the directory where you 

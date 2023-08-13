@@ -23,6 +23,9 @@
 #define NUM_ARGC 11
 
 void parseArguments(int argc, char *argv[], Pics *img, Input *input);
+void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]);
+// this was bad idea xD
+// int checkArgv(char *argv[NUM_ARGC], char *option);
 // Action performAction(const Action *action);
 void printHelp();
 void printVersion();

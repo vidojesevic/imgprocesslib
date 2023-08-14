@@ -199,7 +199,8 @@ void printHelp() {
     printf("\nUsage examples:\n");
     printf("  ipl image.jpg -r --background output.jpg -q 80\n");
     printf("  ipl image.png -r --custom -w 1200 -h 900 output.png\n");
-    printf("  ipl image.png -c --x 100 --y 100 --width 300 --height 300 output.png\n");
+    printf("  ipl image.png -c -x 100 -y 100 output.png\n");
+    printf("  ipl image.png -c -b 100 output.png\n");
     printf("  ipl image.jpg -f --angle 90 output.jpg\n");
     printf("\nBug Reporting:\n");
     printf("If you encounter any bugs or issues while using ipl, please report them to \n<vidoje.sevic.275.19@ict.edu.rs>. Your feedback is valuable in improving the tool.\n");

@@ -122,48 +122,56 @@ void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]) {
         findOutExtension(dime->name, dime->ext);
         printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
         resize(img, dime);
-    }
-    if (strcmp(resizeOption, "--hero") == 0) {
+    } else if (strcmp(resizeOption, "--hero") == 0) {
         resizeHero(dime);
         strcpy(dime->name, argv[4]);
         findOutExtension(dime->name, dime->ext);
         printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
         resize(img, dime);
-    }
-    if (strcmp(resizeOption, "--web-banner") == 0) {
+    } else if (strcmp(resizeOption, "--web-banner") == 0) {
         resizeBanner(dime);
         strcpy(dime->name, argv[4]);
         findOutExtension(dime->name, dime->ext);
         printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
         resize(img, dime);
-    }
-    if (strcmp(resizeOption, "--blog") == 0) {
+    } else if (strcmp(resizeOption, "--blog") == 0) {
         resizeBlog(dime);
         strcpy(dime->name, argv[4]);
         findOutExtension(dime->name, dime->ext);
         printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
         resize(img, dime);
-    }
-    if (strcmp(resizeOption, "--logo-rec") == 0) {
+    } else if (strcmp(resizeOption, "--logo-rec") == 0) {
         resizeLogoRec(dime);
         strcpy(dime->name, argv[4]);
         findOutExtension(dime->name, dime->ext);
         printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
         resize(img, dime);
-    }
-    if (strcmp(resizeOption, "--logo-sq") == 0) {
+    } else if (strcmp(resizeOption, "--logo-sq") == 0) {
         resizeLogoSc(dime);
         strcpy(dime->name, argv[4]);
         findOutExtension(dime->name, dime->ext);
         printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
         resize(img, dime);
-    }
-    if (strcmp(resizeOption, "--favicon") == 0) {
+    } else if (strcmp(resizeOption, "--favicon") == 0) {
         resizeFavicon(dime);
         strcpy(dime->name, argv[4]);
         findOutExtension(dime->name, dime->ext);
         printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
         resize(img, dime);
+    } else if (strcmp(resizeOption, "--custom") == 0) {
+        char *customOptionWidth = argv[4];
+        char *customOptionHeight = argv[6];
+        if (strcmp(customOptionWidth, "-w") == 0 && strcmp(customOptionHeight, "-h") == 0) {
+            dime->resWidth = atoi(argv[5]);
+            dime->resHeight = atoi(argv[7]);
+            strcpy(dime->name, argv[8]);
+            findOutExtension(dime->name, dime->ext);
+            printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
+            resize(img, dime);
+        }
+    } else {
+        printHelp();
+        exit(EXIT_FAILURE);
     }
 }
 

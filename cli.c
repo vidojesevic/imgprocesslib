@@ -23,12 +23,15 @@
 #include <getopt.h>
 #include "cli.h"
 #include "resize.h"
+#include "crop.h"
+#include "rotate.h"
 
 unsigned char *imgData;
 char *fileSize;
 Dime dime;
+Flip flip;
 
-void parseArguments(int argc, char *argv[], Pics *img, Input *input) {
+void parseArguments(int argc, char *argv[], Pics *img, Input *input, Crop *crop) {
     if (argc == 2) {
         int i = argc - 1;
         if (strcmp(argv[i], "-h") != 0 && strcmp(argv[i], "--help") != 0 && strcmp(argv[i], "-v") != 0 && strcmp(argv[i], "--version") != 0) {
@@ -71,16 +74,43 @@ void parseArguments(int argc, char *argv[], Pics *img, Input *input) {
 
         if (strcmp(cli_option, "-r") == 0) {
             resizeCLI(img, &dime, argc, argv);
-        }
-        if (strcmp(cli_option, "-c") == 0) {
-            printf("Crop\n");
-        }
-        if (strcmp(cli_option, "-f") == 0) {
-            printf("Rotate\n");
+        } else if (strcmp(cli_option, "-c") == 0) {
+            cropCLI(img, argc, argv, crop);
+        } else if (strcmp(cli_option, "-f") == 0) {
+            rotateCLI(img, argc, argv, &flip);
         }
 
     }
     free(fileSize);
+}
+void rotateCLI(Pics *img, int argc, char *argv[], Flip *flip) {
+    printf("Candy flip\n");
+    rotate(img, flip);
+}
+
+void cropCLI(Pics *img, int argc, char *argv[], Crop *crop) {
+    char *cropXarg = argv[3];
+    char *cropYarg = argv[5];
+    
+    if (strcmp(cropXarg, "-x") == 0 && strcmp(cropYarg, "-y") == 0) {
+        strcpy(img->name, argv[7]);
+        printf("Crop madafaka\n");
+        crop->x = atoi(argv[4]);
+        crop->y = atoi(argv[6]);
+    } else if (strcmp(cropXarg, "-b") == 0) {
+        strcpy(img->name, argv[5]);
+        crop->x = crop->y = atoi(argv[4]);
+    } else {
+        perror("Error: Input argument failed! Use -x and -y");
+        exit(EXIT_FAILURE);
+    }
+    findOutExtension(img->name, img->ext);
+
+    if (crop->x >= img->width || crop->y >= img->height) {
+        perror("Error: Values of X and Y must be less than original width and height!");
+        exit(EXIT_FAILURE);
+    }
+    cropImage(img, crop);
 }
 
 void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]) {

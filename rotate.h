@@ -15,15 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/gpl-3.0.txt>
  * */
-#ifndef CROP_H
-#define CROP_H
+#ifndef ROTATE_H
+#define ROTATE_H
 
 //dependencies
 #include "ipl.h"
 #include "prompt.h"
 
 // Functions
-void cropImage(Pics *img, Crop *crop);
+void rotate(Pics *img, Flip *flip);
 
 #endif
+
 

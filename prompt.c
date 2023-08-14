@@ -39,7 +39,7 @@ void promptMode(Pics *img, Dime *dime, int option, Crop *crop) {
                 resizePrompt(img, dime);
                 break;
             case CROP:
-                cropPrompt(img, crop);
+                cropPrompt(img, crop, dime);
                 break;
             case ROTATE:
                 rotate();
@@ -212,11 +212,28 @@ void getQuality(Dime *dime) {
 
 }
 
-void cropPrompt(Pics *img, Crop *crop) {
-    
+void cropPrompt(Pics *img, Crop *crop, Dime *dime) {
+    int x, y;
     printf("Crop from prompt\n");
+    printf("Enter x-axys\n");
+    scanf("%d", &x);
+    if (x >= img->width) {
+        perror("Error: invalid input! Value must be less than width!\n");
+        exit(EXIT_FAILURE);
+    }
+    printf("Enter y-axys\n");
+    scanf("%d", &y);
+    if (y >= img->height) {
+        perror("Error: invalid input! Value must be less than width!\n");
+        exit(EXIT_FAILURE);
+    }
+    clearInputBuffer();
+    getName(dime);
+    strcpy(img->name, dime->name);
 
-    // cropImage(img, crop);
+    crop->x = x;
+    crop->y = y;
+    cropImage(img, crop);
 }
 
 int back(int *backToMainMenu) {

@@ -22,8 +22,10 @@
 
 #define NUM_ARGC 11
 
-void parseArguments(int argc, char *argv[], Pics *img, Input *input);
+void parseArguments(int argc, char *argv[], Pics *img, Input *input, Crop *crop);
 void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]);
+void cropCLI(Pics *img, int argc, char *argv[], Crop *crop);
+void rotateCLI(Pics *img, int argc, char *argv[], Flip *flip);
 // this was bad idea xD
 // int checkArgv(char *argv[NUM_ARGC], char *option);
 // Action performAction(const Action *action);

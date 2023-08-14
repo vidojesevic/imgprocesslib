@@ -30,6 +30,8 @@
 #include "cli.h"
 #include "prompt.h"
 #include "resize.h"
+#include "crop.h"
+#include "rotate.h"
 
 //Dependencies
 #define STB_IMAGE_IMPLEMENTATION
@@ -42,12 +44,12 @@ int main(int argc, char *argv[]) {
     Pics img;
     Dime dime;
     unsigned char *imgData;
-    char *fileSize;
+    char *fileSize = NULL;
     Crop crop;
 
     if (argc > 1) {
         // If user call ./ipl with more than 1 argv
-        parseArguments(argc, argv, &img, &input);
+        parseArguments(argc, argv, &img, &input, &crop);
     } else {
         // prompt mode
         int option = 0;
@@ -79,10 +81,11 @@ int main(int argc, char *argv[]) {
         promptMode(&img, &dime, option, &crop);
 
         // stbi_image_free(imgData);
-        free(imgData);
         free(fileSize);
+        free(imgData);
         free(input.data);
         free(img.data);
+        free(img.size);
     }
 
 
@@ -133,7 +136,7 @@ void allocateImg(char *path, Input *input, unsigned char **imgData) {
 
     if (*imgData == NULL) {
         fprintf(stderr, "Error loading image: %s from '%s'!\n", stbi_failure_reason(), path);
-        free(input->data); // Free the allocated memory before exiting
+        free(imgData); // Free the allocated memory before exiting
         exit(EXIT_FAILURE);
     } else {
         input->data = (unsigned char*)malloc(input->width * input->height * input->channels);
@@ -147,7 +150,7 @@ void allocateImg(char *path, Input *input, unsigned char **imgData) {
 
     memcpy(input->data, *imgData, input->width * input->height * input->channels);
 
-    stbi_image_free(*imgData);
+    free(*imgData);
 }
 
 void getSize(char *path, Input *input, char **fileSize) {
@@ -191,9 +194,9 @@ void getSize(char *path, Input *input, char **fileSize) {
         strcpy(input->bitInfo, "32-bit/color (RGBA, 4 channels)");
     }
 
-    if (*fileSize != NULL) {
-        free(*fileSize);
-    }
+    // if (*fileSize != NULL) {
+    //     free(*fileSize);
+    // }
 
     *fileSize = calcSize(path);
 }
@@ -201,6 +204,7 @@ void getSize(char *path, Input *input, char **fileSize) {
 char* calcSize(const char* filename) {
     long fileSize;
     char sizeChar[SIZE];
+    char *size = NULL;
     struct stat st;
 
     if (stat(filename, &st) == 0) {
@@ -217,7 +221,7 @@ char* calcSize(const char* filename) {
         snprintf(sizeChar, sizeof(sizeChar), "%ld B", fileSize);
     }
 
-    char *size = strdup(sizeChar);
+    size = strdup(sizeChar);
     if (size == NULL) {
         perror("Error alocation failed");
         exit(EXIT_FAILURE);
@@ -302,33 +306,6 @@ void saveResizedImage(unsigned char* imageData, int width, int height, int chann
         free(imageData);
         return;
     }
-    // switch (extension[0]) {
-    //     case "j":
-    //         if (strcmp(extension, "jpg") == 0 || strcmp(extension, "jpeg") == 0)
-    //             saveJPG(imageData, width, height, channel, filename, &result);
-    //         break;
-    //     case "p":
-    //         if (strcmp(extension, "png") == 0)
-    //             savePNG(imageData, width, height, channel, filename, &result);
-    //         break;
-    //     case "b":
-    //         if (strcmp(extension, "bmp") == 0)
-    //             saveBMP(imageData, width, height, channel, filename, &result);
-    //         break;
-    //     case "t":
-    //         if (strcmp(extension, "tga") == 0)
-    //             saveTGA(imageData, width, height, channel, filename, &result);
-    //         break;
-    //     case "h":
-    //         if (strcmp(extension, "hdr") == 0)
-    //             saveHDR(imageData, width, height, channel, filename, &result);
-    //         break;
-    //     default:
-    //         printf("Unsupported file extension.\n");
-    //         free(imageData);
-    //         return;
-    // }
-
 
     char *sizeChar;
 
@@ -339,6 +316,14 @@ void saveResizedImage(unsigned char* imageData, int width, int height, int chann
         printf("Image saved to %s! Size: %s!\n", filename, sizeChar);
         free(sizeChar);
     }
+    free(imageData);
+}
+
+void saveCroppedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality) {
+
+    stbi_write_png(filename, width, height, channel, imageData, width * channel);
+
+    printf("Cropped image saved as %s\n", filename);
     free(imageData);
 }
 
@@ -371,16 +356,8 @@ void saveHDR(unsigned char* imageData, int width, int height, int channel, const
 
     *result = stbi_write_hdr(filename, width, height, channel, floatImageData);
 
+    free(floatImageData);
 }
-
-void crop() {
-    printf("    Crop image\nComming soon...\n");
-}
-
-void rotate() {
-    printf("    Rotate image\nComming soon...\n");
-}
-
 
 void clearInputBuffer() {
     int c;

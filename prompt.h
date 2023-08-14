@@ -28,7 +28,7 @@ void printResInfo(Dime *dime);
 void printMenu();
 void printResMenu();
 void getQuality(Dime *dime);
-void cropPrompt(Pics *img, Crop *crop);
+void cropPrompt(Pics *img, Crop *crop, Dime *dime);
 int back(int *backToMainMenu);
 void quit();
 

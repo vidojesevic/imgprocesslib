@@ -26,11 +26,13 @@
 
 typedef struct Picture {
     char path[PATH_SIZE];
+    char name[BIT_NAME_SIZE];
     char ext[EXT_SIZE];
     int height;
     int width;
     int channel;
     int bitDepth;
+    int quality;
     char bitInfo[BIT_NAME_SIZE];
     char *size;
     unsigned char* data;
@@ -56,7 +58,12 @@ typedef struct NewDimension {
 typedef struct Crop { 
     int x;
     int y;
+    int border;
 } Crop;
+
+typedef struct Flip {
+    int angle;
+} Flip;
 
 typedef enum {
     RESIZE = 1,
@@ -90,7 +97,6 @@ char* calcSize(const char* result);
 void getName(Dime *dime);
 void getWidth(Dime *dime);
 void getHeight(Dime *dime);
-void crop();
 void rotate();
 // void performFreeing(Pics *img);
 void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result, int quality);
@@ -99,6 +105,7 @@ void saveBMP(unsigned char* imageData, int width, int height, int channel, const
 void saveTGA(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
 void saveHDR(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
 void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality);
+void saveCroppedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality);
 void clearInputBuffer();
 
 #endif

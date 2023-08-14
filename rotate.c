@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/gpl-3.0.txt>
  * */
-#ifndef CROP_H
-#define CROP_H
-
-//dependencies
-#include "ipl.h"
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
 #include "prompt.h"
+#include "cli.h"
 
-// Functions
-void cropImage(Pics *img, Crop *crop);
-
-#endif
-
+void rotate(Pics *img, Flip *flip) {
+    flip->angle = 90;
+    printf("Hello from rotate.c, Angle is %d\n", flip->angle);
+}

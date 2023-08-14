@@ -2,7 +2,7 @@
 # See LICENSE file for copyright and license details.
 
 CC = gcc
-SRC = ipl.c prompt.c cli.c resize.c
+SRC = ipl.c prompt.c cli.c resize.c crop.c rotate.c
 OUT = ipl
 INSTALL_DIR = /usr/local/bin
 

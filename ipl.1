@@ -24,7 +24,93 @@ want to process an image located at assets/img/logo.png, you can simply enter
 assets/img/logo.png as the image name. Similarly, you can enter relative paths 
 using the ../ notation. For example, if the image is located two directories 
 above the current directory, you can enter ../../directory/image.png.
+.SH CROP
+.TP
+.BR -c
+Crop a specific region from an image. This option allows you to select a rectangular
+region within the image and create a new image containing only that region. When prompted,
+you can specify the X and Y coordinates of the top-left corner of the region, as well as
+the width and height of the region.
+.TP
+.BR -x
+The X coordinate of the top-left corner for cropping or resizing.
 
+.TP
+.BR -y 
+The Y coordinate of the top-left corner for cropping or resizing.
+
+.TP
+.BR -b 
+Use with cropping to specify an equal border for cropping from all sides.
+Just specify border without 'x' and 'y'.
+
+.SH RESIZE
+.TP
+.BR -r 
+Resize an image to a custom size.
+
+.TP
+.BR --background
+Resize an image for use as a background. This option resizes the image to fit the screen,
+considering common aspect ratios for desktop backgrounds.
+
+.TP
+.BR --hero
+Resize an image to be used as a hero image on a website. This option resizes the image to
+common hero image dimensions, suitable for banners and headers.
+
+.TP
+.BR --web-banner
+Resize an image for use as a website banner. The recommended dimensions are 250 x 250 with
+an aspect ratio of 1:1.
+
+.TP
+.BR --blog
+Resize an image for use in a blog post. The recommended dimensions are 1200 x 630 with
+an aspect ratio of 3:2.
+
+.TP
+.BR --logo-rec
+Resize an image for use as a rectangular logo. The recommended dimensions are 250 x 100 with
+an aspect ratio of 2:3.
+
+.TP
+.BR --logo-sq
+Resize an image for use as a square logo. The recommended dimensions are 100 x 100 with
+an aspect ratio of 1:1.
+
+.TP
+.BR --favicon
+Resize an image for use as a favicon. The recommended dimensions are 16 x 16 with an
+aspect ratio of 1:1.
+
+.TP
+.BR --social
+Resize an image for use as a social media icon. The recommended dimensions are 32 x 32 with
+an aspect ratio of 1:1.
+
+.TP
+.BR --lightbox
+Resize an image for use in a lightbox (full-screen view). The recommended dimensions are
+1600 x 500 with an aspect ratio of 16:9.
+
+.TP
+.BR --thumb
+Resize an image for use as a thumbnail. The recommended dimensions are 150 x 150 with
+an aspect ratio of 1:1.
+
+.TP
+.BR --custom
+Resize an image to a custom size. Use this option if you want to specify your own width and
+height for resizing.
+
+.TP
+.BR -w 
+Specify the width for resizing.
+
+.TP
+.BR -h 
+Specify the height for resizing.
 .SH EXAMPLES
 Resize an image to a custom size:
 .nf

@@ -62,7 +62,9 @@ typedef struct Crop {
 } Crop;
 
 typedef struct Flip {
-    int angle;
+    char direction[BIT_NAME_SIZE];
+    float cosTheta;
+    float sinTheta;
 } Flip;
 
 typedef enum {
@@ -104,7 +106,7 @@ void savePNG(unsigned char* imageData, int width, int height, int channel, const
 void saveBMP(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
 void saveTGA(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
 void saveHDR(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result);
-void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality);
+void saveImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality);
 void saveCroppedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality);
 void clearInputBuffer();
 

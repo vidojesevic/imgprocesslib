@@ -288,7 +288,7 @@ void getName(Dime *dime) {
     // printf("Dime name is %s, ext is %s\n", dime->name, dime->ext);
 }
 
-void saveResizedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality) {
+void saveImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality) {
 
     int result = 0;
     if (strcmp(extension, "jpg") == 0 || strcmp(extension, "jpeg") == 0) {
@@ -319,17 +319,18 @@ void saveResizedImage(unsigned char* imageData, int width, int height, int chann
     free(imageData);
 }
 
-void saveCroppedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality) {
-
-    stbi_write_png(filename, width, height, channel, imageData, width * channel);
-
-    printf("Cropped image saved as %s\n", filename);
-    free(imageData);
-}
+// void saveCroppedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality) {
+//
+//     stbi_write_png(filename, width, height, channel, imageData, width * channel);
+//
+//     printf("Cropped image saved as %s\n", filename);
+//     free(imageData);
+// }
 
 void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result, int quality) {
-    // printf("Enter jpg quality [1-100]: ");
-    // scanf("%d", &quality);
+    if (quality == 0) {
+        quality = 80;
+    }
     if (quality > 0 && quality <= 100)
         *result = stbi_write_jpg(filename, width, height, channel, imageData, quality);
 }

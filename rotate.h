@@ -23,6 +23,8 @@
 #include "prompt.h"
 
 // Functions
+unsigned char interpolateColor(Pics *img, float x, float y, int channel, char direction[BIT_NAME_SIZE]);
+void rotationAlgoritm(unsigned char *imgData, Pics *img, Flip *flip, int newWidth, int newHeight);
 void rotate(Pics *img, Flip *flip);
 
 #endif

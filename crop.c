@@ -56,7 +56,7 @@ void cropImage(Pics *img, Crop *crop) {
     }
 
     printf("Jel ovde problem?");
-    saveCroppedImage(croppedData, newWidth, newHeight, img->channel, outputFilename, img->ext, img->quality);
+    saveImage(croppedData, newWidth, newHeight, img->channel, outputFilename, img->ext, img->quality);
 
     free(img->data);
     img->data = croppedData;

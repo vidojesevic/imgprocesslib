@@ -75,7 +75,7 @@ typedef enum {
 } Options;
 
 typedef enum {
-    BACKGR = 1,
+    BACK = 1,
     HERO,
     BANNER,
     BLOG,
@@ -86,8 +86,21 @@ typedef enum {
     LIGHTBOX,
     THUMBNAIL,
     CUSTOM,
-    BACK
+    GOBACK
 } Res;
+
+typedef struct {
+    Res resValue;
+    const char *resOption;
+} ResOptionMapping;
+
+// function pointer type
+typedef Dime (*ResizeFunction)(Dime *dime);
+
+typedef struct {
+    const char *resOption;
+    Dime (*resizeFunction)(Dime *dime);
+} ResOptionFunction;
 
 // System functions
 Pics* getPath(Pics *img);

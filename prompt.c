@@ -55,17 +55,17 @@ void resizePrompt(Pics *img, Dime *dime) {
     int res = 0;
     int backToMainMenu = 0;
     char proc, sv;
-    while (res != BACK) {
+    while (res != GOBACK) {
         printResMenu();
         printf("Resize option number: ");
         scanf("%d", &res);
-        while (res < BACKGR || res > BACK) {
-            printf("Error number: %d\nOption must be in range [%d-%d]\n", errno, BACKGR, BACK);
+        while (res < BACK || res > GOBACK) {
+            printf("Error number: %d\nOption must be in range [%d-%d]\n", errno, BACK, GOBACK);
             printResMenu();
             scanf("%d", &res);
         }
         switch (res) {
-            case BACKGR:
+            case BACK:
                 resizeBack(dime);
                 clearInputBuffer();
                 break;
@@ -109,7 +109,7 @@ void resizePrompt(Pics *img, Dime *dime) {
                 clearInputBuffer();
                 resizeCustom(dime);
                 break;
-            case BACK:
+            case GOBACK:
                 back(&backToMainMenu);
                 return;
                 break;
@@ -183,7 +183,7 @@ void printMenu() {
 
 void printResMenu() {
     printf("    Resize options:\n");
-    printf("\t%d Background image [1920 x 1080] \\ [16:9]\n", BACKGR);
+    printf("\t%d Background image [1920 x 1080] \\ [16:9]\n", BACK);
     printf("\t%d Hero image [1280 x 720] \\ [16:9]\n", HERO);
     printf("\t%d Website banner [250 x 250] \\ [1:1]\n", BANNER);
     printf("\t%d Blog image [1200 x 630] \\ [3:2]\n", BLOG);

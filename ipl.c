@@ -136,7 +136,7 @@ void allocateImg(char *path, Input *input, unsigned char **imgData) {
 
     if (*imgData == NULL) {
         fprintf(stderr, "Error loading image: %s from '%s'!\n", stbi_failure_reason(), path);
-        free(imgData); // Free the allocated memory before exiting
+        stbi_image_free(imgData); // Free the allocated memory before exiting
         exit(EXIT_FAILURE);
     } else {
         input->data = (unsigned char*)malloc(input->width * input->height * input->channels);
@@ -319,18 +319,10 @@ void saveImage(unsigned char* imageData, int width, int height, int channel, con
     free(imageData);
 }
 
-// void saveCroppedImage(unsigned char* imageData, int width, int height, int channel, const char* filename, char *extension, int quality) {
-//
-//     stbi_write_png(filename, width, height, channel, imageData, width * channel);
-//
-//     printf("Cropped image saved as %s\n", filename);
-//     free(imageData);
-// }
-
 void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result, int quality) {
-    if (quality == 0) {
-        quality = 80;
-    }
+    // if (quality == 0) {
+    //     quality = 80;
+    // }
     if (quality > 0 && quality <= 100)
         *result = stbi_write_jpg(filename, width, height, channel, imageData, quality);
 }

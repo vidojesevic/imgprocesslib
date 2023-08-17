@@ -27,7 +27,6 @@ unsigned char *stbi_load(const char* filename, int *x, int *y, int *n, int desir
 
 void cropImage(Pics *img, Crop *crop) {
 
-    printf("X: %d, Y: %d, border: %d\n", crop->x, crop->y, crop->border);
     int newWidth = img->width - 2 * crop->x;
     int newHeight = img->height - 2 * crop->y;
 
@@ -43,8 +42,8 @@ void cropImage(Pics *img, Crop *crop) {
         exit(EXIT_FAILURE);
     }
 
-    char outputFilename[PATH_SIZE]; // Define a buffer for the output filename
-    snprintf(outputFilename, sizeof(outputFilename), "cropped_%s", img->name);
+    // char outputFilename[PATH_SIZE]; // Define a buffer for the output filename
+    // snprintf(outputFilename, sizeof(outputFilename), "cropped_%s", img->name);
 
     for (int y = crop->y; y < crop->y + newHeight; y++) {
         for (int x = crop->x; x < crop->x + newWidth; x++) {
@@ -55,21 +54,10 @@ void cropImage(Pics *img, Crop *crop) {
         }
     }
 
-    printf("Jel ovde problem?");
-    saveImage(croppedData, newWidth, newHeight, img->channel, outputFilename, img->ext, img->quality);
+    saveImage(croppedData, newWidth, newHeight, img->channel, img->name, img->ext, img->quality);
 
     free(img->data);
     img->data = croppedData;
     img->width = newWidth;
     img->height = newHeight;
 }
-
-// for (int y = crop->y; y < img->height; y++) {
-//     for (int x = crop->x; x < img->width; x++) {
-//         for (int c = 0; c < img->channel; c++) {
-//             croppedData[(y - crop->y) * newWidth * img->channel + (x - crop->x) * img->channel + c] =
-//                 img->data[y * img->width * img->channel + x * img->channel + c];
-//         }
-//     }
-// }
-

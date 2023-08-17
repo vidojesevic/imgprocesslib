@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <getopt.h>
 #include "cli.h"
+#include "ipl.h"
 #include "resize.h"
 #include "crop.h"
 #include "rotate.h"
@@ -50,6 +51,7 @@ void parseArguments(int argc, char *argv[], Pics *img, Input *input, Crop *crop)
     } 
 
     if (argc > 2) {
+        img->quality = 80;
         char *path = argv[1];
         strncpy(img->path, path, PATH_SIZE);
         getPath(img);
@@ -83,31 +85,46 @@ void parseArguments(int argc, char *argv[], Pics *img, Input *input, Crop *crop)
     }
     free(fileSize);
 }
+
+void jpgQuality(int argc, char *argv[], char ext[EXT_SIZE], int *quality) {
+    if (strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0) {
+        for (int i = 0; i < argc - 1; ++i) {
+            if (strcmp(argv[i], "-q") == 0 && i + 1 < argc) {
+                *quality = atoi(argv[i + 1]);
+            }
+        }
+    }
+    printf("Quality is %d\n", *quality);
+}
+
 void rotateCLI(Pics *img, int argc, char *argv[], Flip *flip) {
-    strncpy(flip->direction, argv[3], BIT_NAME_SIZE);
-    printf("Direction is %s\n", flip->direction);
-    strcpy(img->name, argv[4]);
-    printf("Candy flip of %s\n", img->name);
+    for (int i = 0; i < argc; ++i) {
+        if (strcmp(argv[i], "cw") == 0 || strcmp(argv[i], "acw") == 0) {
+            strncpy(flip->direction, argv[i], BIT_NAME_SIZE);
+            strcpy(img->name, argv[i+1]);
+            findOutExtension(img->name, img->ext);
+            jpgQuality(argc, argv, img->ext, &img->quality);
+        }
+    }
     rotate(img, flip);
 }
 
 void cropCLI(Pics *img, int argc, char *argv[], Crop *crop) {
-    char *cropXarg = argv[3];
-    char *cropYarg = argv[5];
     
-    if (strcmp(cropXarg, "-x") == 0 && strcmp(cropYarg, "-y") == 0) {
-        strcpy(img->name, argv[7]);
-        printf("Crop madafaka\n");
-        crop->x = atoi(argv[4]);
-        crop->y = atoi(argv[6]);
-    } else if (strcmp(cropXarg, "-b") == 0) {
-        strcpy(img->name, argv[5]);
-        crop->x = crop->y = atoi(argv[4]);
-    } else {
-        perror("Error: Input argument failed! Use -x and -y");
-        exit(EXIT_FAILURE);
+    for (int i = 0; i < argc - 4; ++i) {
+        if (strcmp(argv[i], "-x") == 0 && strcmp(argv[i+2], "-y") == 0) {
+            strcpy(img->name, argv[i+4]);
+            findOutExtension(img->name, img->ext);
+            jpgQuality(argc, argv, img->ext, &img->quality);
+            crop->x = atoi(argv[i+1]);
+            crop->y = atoi(argv[i+3]);
+        } else if (strcmp(argv[i], "-b") == 0) {
+            strcpy(img->name, argv[i+2]);
+            findOutExtension(img->name, img->ext);
+            jpgQuality(argc, argv, img->ext, &img->quality);
+            crop->x = crop->y = atoi(argv[i+1]);
+        }
     }
-    findOutExtension(img->name, img->ext);
 
     if (crop->x >= img->width || crop->y >= img->height) {
         perror("Error: Values of X and Y must be less than original width and height!");
@@ -117,66 +134,56 @@ void cropCLI(Pics *img, int argc, char *argv[], Crop *crop) {
 }
 
 void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]) {
-    char *resizeOption = argv[3];
+    ResOptionMapping resOptions[] = {
+        {BACK, "--background"},
+        {HERO, "--hero"},
+        {BANNER, "--web-banner"},
+        {BLOG, "--blog"},
+        {LOGOREC, "--logo-rec"},
+        {LOGOSC, "--logo-sq"},
+        {FAVICON, "--favicon"},
+        {SOCIAL, "--social"},
+        {LIGHTBOX, "--lightbox"},
+        {THUMBNAIL, "--thumb"}
+    };
 
-    if (strcmp(resizeOption, "--background") == 0) {
-        resizeBack(dime);
-        strcpy(dime->name, argv[4]);
-        findOutExtension(dime->name, dime->ext);
-        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
-        resize(img, dime);
-    } else if (strcmp(resizeOption, "--hero") == 0) {
-        resizeHero(dime);
-        strcpy(dime->name, argv[4]);
-        findOutExtension(dime->name, dime->ext);
-        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
-        resize(img, dime);
-    } else if (strcmp(resizeOption, "--web-banner") == 0) {
-        resizeBanner(dime);
-        strcpy(dime->name, argv[4]);
-        findOutExtension(dime->name, dime->ext);
-        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
-        resize(img, dime);
-    } else if (strcmp(resizeOption, "--blog") == 0) {
-        resizeBlog(dime);
-        strcpy(dime->name, argv[4]);
-        findOutExtension(dime->name, dime->ext);
-        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
-        resize(img, dime);
-    } else if (strcmp(resizeOption, "--logo-rec") == 0) {
-        resizeLogoRec(dime);
-        strcpy(dime->name, argv[4]);
-        findOutExtension(dime->name, dime->ext);
-        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
-        resize(img, dime);
-    } else if (strcmp(resizeOption, "--logo-sq") == 0) {
-        resizeLogoSc(dime);
-        strcpy(dime->name, argv[4]);
-        findOutExtension(dime->name, dime->ext);
-        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
-        resize(img, dime);
-    } else if (strcmp(resizeOption, "--favicon") == 0) {
-        resizeFavicon(dime);
-        strcpy(dime->name, argv[4]);
-        findOutExtension(dime->name, dime->ext);
-        printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
-        resize(img, dime);
-    } else if (strcmp(resizeOption, "--custom") == 0) {
-        char *customOptionWidth = argv[4];
-        char *customOptionHeight = argv[6];
-        if (strcmp(customOptionWidth, "-w") == 0 && strcmp(customOptionHeight, "-h") == 0) {
-            dime->resWidth = atoi(argv[5]);
-            dime->resHeight = atoi(argv[7]);
-            strcpy(dime->name, argv[8]);
-            findOutExtension(dime->name, dime->ext);
-            printf("Dimensions: %d x %d | size: %s\n", dime->resWidth, dime->resHeight, img->size);
-            resize(img, dime);
+    ResOptionFunction resFunction[] = {
+        {"--background", resizeBack},
+        {"--hero", resizeHero},
+        {"--web-banner", resizeBanner},
+        {"--blog", resizeBlog},
+        {"--logo-rec", resizeLogoRec},
+        {"--logo-sq", resizeLogoSc},
+        {"--favicon", resizeFavicon},
+        {"--social", resizeSocial},
+        {"--lightbox", resizeLight},
+        {"--thumb", resizeThumb}
+    };
+
+    size_t numResOption = sizeof(resOptions) / sizeof(resOptions[0]);
+    for (int j = 0; j < argc - 1; ++j) {
+        if (strcmp(argv[j], "--custom") == 0) {
+            if (strcmp(argv[j+1], "-w") == 0 && strcmp(argv[j+3], "-h") == 0) {
+                dime->resWidth = atoi(argv[j+2]);
+                dime->resHeight = atoi(argv[j+4]);
+                strcpy(dime->name, argv[j+5]);
+                findOutExtension(dime->name, dime->ext);
+                jpgQuality(argc, argv, img->ext, &img->quality);
+                resize(img, dime);
+            }
+        } else {
+            for (int i = 0; i < numResOption; ++i) {
+                if (strcmp(argv[j], resOptions[i].resOption) == 0) {
+                    resFunction[i].resizeFunction(dime);
+                    strcpy(dime->name, argv[j+1]);
+                    findOutExtension(dime->name, dime->ext);
+                    jpgQuality(argc, argv, img->ext, &img->quality);
+                    resize(img, dime);
+                } 
+            }
         }
-    } else {
-        printHelp();
-        exit(EXIT_FAILURE);
     }
-}
+}    
 
 void printHelp() {
     printf("Usage: ");

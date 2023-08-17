@@ -23,6 +23,7 @@
 #include <math.h>
 #include "prompt.h"
 #include "cli.h"
+#include "rotate.h"
 
 #define PI 3.14159265358979323846f
 
@@ -101,9 +102,9 @@ void rotate(Pics *img, Flip *flip) {
         rotationAlgoritm(rotatedImageData, img, flip, newWidth, newHeight);
     } else if (strcmp(flip->direction, "acw") == 0) {
         // Anti-clockwise == 3 * clockwise
-        rotationAlgoritm(rotatedImageData, img, flip, newWidth, newHeight);
-        rotationAlgoritm(rotatedImageData, img, flip, newWidth, newHeight);
-        rotationAlgoritm(rotatedImageData, img, flip, newWidth, newHeight);
+        for (int i = 0; i < 3; ++i) {
+            rotationAlgoritm(rotatedImageData, img, flip, newWidth, newHeight);
+        }
     }
 
     saveImage(rotatedImageData, newWidth, newHeight, img->channel, img->name, img->ext, img->quality);

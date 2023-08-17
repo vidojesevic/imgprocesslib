@@ -23,6 +23,7 @@
 #define NUM_ARGC 11
 
 void parseArguments(int argc, char *argv[], Pics *img, Input *input, Crop *crop);
+void jpgQuality(int argc, char *argv[], char ext[EXT_SIZE], int *quality);
 void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]);
 void cropCLI(Pics *img, int argc, char *argv[], Crop *crop);
 void rotateCLI(Pics *img, int argc, char *argv[], Flip *flip);

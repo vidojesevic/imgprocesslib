@@ -70,8 +70,6 @@ void parseArguments(int argc, char *argv[], Pics *img, Input *input, Crop *crop)
         strcpy(img->bitInfo, input->bitInfo);
         img->size = fileSize;
 
-        // printf("Name %s, width: %d, height: %d, channel: %d, size %s\n", img->path, img->width, img->height, img->channel, img->size);
-
         char *cli_option = argv[2];
 
         if (strcmp(cli_option, "-r") == 0) {
@@ -88,13 +86,12 @@ void parseArguments(int argc, char *argv[], Pics *img, Input *input, Crop *crop)
 
 void jpgQuality(int argc, char *argv[], char ext[EXT_SIZE], int *quality) {
     if (strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0) {
-        for (int i = 0; i < argc - 1; ++i) {
+        for (int i = 0; i < argc; ++i) {
             if (strcmp(argv[i], "-q") == 0 && i + 1 < argc) {
                 *quality = atoi(argv[i + 1]);
             }
         }
     }
-    printf("Quality is %d\n", *quality);
 }
 
 void rotateCLI(Pics *img, int argc, char *argv[], Flip *flip) {
@@ -161,6 +158,7 @@ void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]) {
     };
 
     size_t numResOption = sizeof(resOptions) / sizeof(resOptions[0]);
+    img->quality = 80;
     for (int j = 0; j < argc - 1; ++j) {
         if (strcmp(argv[j], "--custom") == 0) {
             if (strcmp(argv[j+1], "-w") == 0 && strcmp(argv[j+3], "-h") == 0) {
@@ -168,7 +166,7 @@ void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]) {
                 dime->resHeight = atoi(argv[j+4]);
                 strcpy(dime->name, argv[j+5]);
                 findOutExtension(dime->name, dime->ext);
-                jpgQuality(argc, argv, img->ext, &img->quality);
+                jpgQuality(argc, argv, dime->ext, &img->quality);
                 resize(img, dime);
             }
         } else {
@@ -177,7 +175,7 @@ void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]) {
                     resFunction[i].resizeFunction(dime);
                     strcpy(dime->name, argv[j+1]);
                     findOutExtension(dime->name, dime->ext);
-                    jpgQuality(argc, argv, img->ext, &img->quality);
+                    jpgQuality(argc, argv, dime->ext, &img->quality);
                     resize(img, dime);
                 } 
             }
@@ -213,7 +211,7 @@ void printHelp() {
     printf("  -w\t\t\twidth, provide number in px\n");
     printf("  -h\t\t\theight, provide number in px\n");
     printf("Special case:\n");
-    printf("  -q\t\t\tIf working with .img output, you can provide quality number [1-100], else quality defaults is 80\n");
+    printf("  -q\t\t\tIf working with .img/.jpeg output, you can provide quality number [1-100], else quality default is 80\n");
     printf("\nCrop options:\n");
     printf("  -x\t\t\tx-axis, provide number in px\n");
     printf("  -y\t\t\ty-axis, provide number in px\n");

@@ -27,9 +27,6 @@ void jpgQuality(int argc, char *argv[], char ext[EXT_SIZE], int *quality);
 void resizeCLI(Pics *img, Dime *dime, int argc, char *argv[]);
 void cropCLI(Pics *img, int argc, char *argv[], Crop *crop);
 void rotateCLI(Pics *img, int argc, char *argv[], Flip *flip);
-// this was bad idea xD
-// int checkArgv(char *argv[NUM_ARGC], char *option);
-// Action performAction(const Action *action);
 void printHelp();
 void printVersion();
 void printUnknownOption(char argv[NUM_ARGC], int *i);

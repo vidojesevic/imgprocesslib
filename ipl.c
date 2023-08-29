@@ -320,9 +320,6 @@ void saveImage(unsigned char* imageData, int width, int height, int channel, con
 }
 
 void saveJPG(unsigned char* imageData, int width, int height, int channel, const char* filename, int *result, int quality) {
-    // if (quality == 0) {
-    //     quality = 80;
-    // }
     if (quality > 0 && quality <= 100)
         *result = stbi_write_jpg(filename, width, height, channel, imageData, quality);
 }

@@ -108,4 +108,5 @@ void rotate(Pics *img, Flip *flip) {
     }
 
     saveImage(rotatedImageData, newWidth, newHeight, img->channel, img->name, img->ext, img->quality);
+
 }

@@ -77,11 +77,11 @@ void rotate(Pics *img, Flip *flip) {
     if (strcmp(flip->direction, "cw") == 0) {
         flip->cosTheta = cos(angleRadCW);
         flip->sinTheta = sin(angleRadCW);
-        printf("Rotation direction is clockwise\n");
+        // printf("Rotation direction is clockwise\n");
     } else if (strcmp(flip->direction, "acw") == 0) {
         flip->cosTheta = cos(angleRadACW);
         flip->sinTheta = sin(angleRadACW);
-        printf("Rotation direction is anti-clockwise\n");
+        // printf("Rotation direction is anti-clockwise\n");
     } else {
         perror("Error direction input!\n");
         exit(EXIT_FAILURE);

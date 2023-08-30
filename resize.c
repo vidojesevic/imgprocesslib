@@ -35,7 +35,6 @@ void resize(Pics *img, Dime *dime) {
         printf("Error resizing image.\n");
     } 
     if (resizedData != NULL) {
-        // free allocated memory from allocateImg()
         stbi_image_free(img->data);
 
         img->width = dime->resWidth;

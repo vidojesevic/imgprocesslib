@@ -55,7 +55,6 @@ void cropImage(Pics *img, Crop *crop) {
     }
 
     saveImage(croppedData, newWidth, newHeight, img->channel, img->name, img->ext, img->quality);
-    printf("From crop, q = %d\n", img->quality);
 
     free(img->data);
     img->data = croppedData;

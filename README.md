@@ -1,6 +1,8 @@
 # ipl - Simple Image Processing Library
 <span style="color:#blue">[![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](https://github.com/vidojesevic/imgprocesslib/blob/main/LICENSE)</span>
 
+![Alt text](ipl.png)
+
 ## Overview 
 **ipl** is a simple terminal-based image processing tool that allows you to resize 
 images quickly. It provides an easy-to-use command-line interface for resizing 
